@@ -1,0 +1,338 @@
+define(['dart_sdk', 'packages/flutter/src/widgets/widget_span.dart', 'packages/app_itr/helpers/classes/user.dart', 'packages/provider/src/provider.dart', 'packages/flutter/src/material/icon_button.dart', 'packages/app_itr/etc/ThemeCTRM.dart', 'packages/flutter/src/rendering/flex.dart', 'packages/flutter/src/painting/image_resolution.dart', 'packages/flutter/src/material/page.dart', 'packages/app_itr/ui/SelectCityPage.dart'], (function load__packages__app_itr__ui__TitleHome_dart(dart_sdk, packages__flutter__src__widgets__widget_span$46dart, packages__app_itr__helpers__classes__user$46dart, packages__provider__src__provider$46dart, packages__flutter__src__material__icon_button$46dart, packages__app_itr__etc__ThemeCTRM$46dart, packages__flutter__src__rendering__flex$46dart, packages__flutter__src__painting__image_resolution$46dart, packages__flutter__src__material__page$46dart, packages__app_itr__ui__SelectCityPage$46dart) {
+  'use strict';
+  const core = dart_sdk.core;
+  const _internal = dart_sdk._internal;
+  const async = dart_sdk.async;
+  const _interceptors = dart_sdk._interceptors;
+  const dart = dart_sdk.dart;
+  const dartx = dart_sdk.dartx;
+  const framework = packages__flutter__src__widgets__widget_span$46dart.src__widgets__framework;
+  const basic = packages__flutter__src__widgets__widget_span$46dart.src__widgets__basic;
+  const gesture_detector = packages__flutter__src__widgets__widget_span$46dart.src__widgets__gesture_detector;
+  const image = packages__flutter__src__widgets__widget_span$46dart.src__widgets__image;
+  const widget_inspector = packages__flutter__src__widgets__widget_span$46dart.src__widgets__widget_inspector;
+  const navigator = packages__flutter__src__widgets__widget_span$46dart.src__widgets__navigator;
+  const db = packages__app_itr__helpers__classes__user$46dart.helpers__db;
+  const login_data_store = packages__app_itr__helpers__classes__user$46dart.stores__login_data_store;
+  const provider = packages__provider__src__provider$46dart.src__provider;
+  const scaffold = packages__flutter__src__material__icon_button$46dart.src__material__scaffold;
+  const ThemeCTRM = packages__app_itr__etc__ThemeCTRM$46dart.etc__ThemeCTRM;
+  const flex = packages__flutter__src__rendering__flex$46dart.src__rendering__flex;
+  const image_resolution = packages__flutter__src__painting__image_resolution$46dart.src__painting__image_resolution;
+  const page = packages__flutter__src__material__page$46dart.src__material__page;
+  const SelectCityPage = packages__app_itr__ui__SelectCityPage$46dart.ui__SelectCityPage;
+  const LoginPage = packages__app_itr__ui__SelectCityPage$46dart.ui__LoginPage;
+  var TitleHome = Object.create(dart.library);
+  dart._checkModuleNullSafetyMode(true);
+  var T = {
+    VoidTovoid: () => (T.VoidTovoid = dart.constFn(dart.fnType(dart.void, [])))(),
+    JSArrayOfWidget: () => (T.JSArrayOfWidget = dart.constFn(_interceptors.JSArray$(framework.Widget)))(),
+    ObjectN: () => (T.ObjectN = dart.constFn(dart.nullable(core.Object)))(),
+    BuildContextToSelectCityPage: () => (T.BuildContextToSelectCityPage = dart.constFn(dart.fnType(SelectCityPage.SelectCityPage, [framework.BuildContext])))(),
+    StringToFuture: () => (T.StringToFuture = dart.constFn(dart.fnType(async.Future, [core.String])))(),
+    BuildContextToLoginPage: () => (T.BuildContextToLoginPage = dart.constFn(dart.fnType(LoginPage.LoginPage, [framework.BuildContext])))(),
+    FutureOfvoid: () => (T.FutureOfvoid = dart.constFn(async.Future$(dart.void)))(),
+    VoidToFutureOfvoid: () => (T.VoidToFutureOfvoid = dart.constFn(dart.fnType(T.FutureOfvoid(), [])))()
+  };
+  var T$Eval = Object.assign({
+    _: () => T$Eval
+  }, T);
+  var S = {
+    _: () => S
+  };
+  var S$Eval = Object.assign({
+    _: () => S$Eval
+  }, S);
+  const CT = Object.create({
+    _: () => (C, CT)
+  });
+  dart.defineLazy(CT, {
+    get C2() {
+      return C[2] = dart.const({
+        __proto__: widget_inspector._Location.prototype,
+        [_Location_parameterLocations]: null,
+        [_Location_name]: "image",
+        [_Location_column]: 28,
+        [_Location_line]: 50,
+        [_Location_file]: null
+      });
+    },
+    get C1() {
+      return C[1] = dart.constList([C[2] || CT.C2], widget_inspector._Location);
+    },
+    get C0() {
+      return C[0] = dart.const({
+        __proto__: widget_inspector._Location.prototype,
+        [_Location_parameterLocations]: C[1] || CT.C1,
+        [_Location_name]: null,
+        [_Location_column]: 22,
+        [_Location_line]: 50,
+        [_Location_file]: "file:///C:/Users/Mateus/Documents/Projetos/app_itr/lib/ui/TitleHome.dart"
+      });
+    },
+    get C5() {
+      return C[5] = dart.const({
+        __proto__: widget_inspector._Location.prototype,
+        [_Location_parameterLocations]: null,
+        [_Location_name]: "child",
+        [_Location_column]: 15,
+        [_Location_line]: 50,
+        [_Location_file]: null
+      });
+    },
+    get C6() {
+      return C[6] = dart.const({
+        __proto__: widget_inspector._Location.prototype,
+        [_Location_parameterLocations]: null,
+        [_Location_name]: "onTap",
+        [_Location_column]: 15,
+        [_Location_line]: 51,
+        [_Location_file]: null
+      });
+    },
+    get C4() {
+      return C[4] = dart.constList([C[5] || CT.C5, C[6] || CT.C6], widget_inspector._Location);
+    },
+    get C3() {
+      return C[3] = dart.const({
+        __proto__: widget_inspector._Location.prototype,
+        [_Location_parameterLocations]: C[4] || CT.C4,
+        [_Location_name]: null,
+        [_Location_column]: 11,
+        [_Location_line]: 49,
+        [_Location_file]: "file:///C:/Users/Mateus/Documents/Projetos/app_itr/lib/ui/TitleHome.dart"
+      });
+    },
+    get C9() {
+      return C[9] = dart.const({
+        __proto__: widget_inspector._Location.prototype,
+        [_Location_parameterLocations]: null,
+        [_Location_name]: "mainAxisAlignment",
+        [_Location_column]: 9,
+        [_Location_line]: 46,
+        [_Location_file]: null
+      });
+    },
+    get C10() {
+      return C[10] = dart.const({
+        __proto__: widget_inspector._Location.prototype,
+        [_Location_parameterLocations]: null,
+        [_Location_name]: "crossAxisAlignment",
+        [_Location_column]: 9,
+        [_Location_line]: 47,
+        [_Location_file]: null
+      });
+    },
+    get C11() {
+      return C[11] = dart.const({
+        __proto__: widget_inspector._Location.prototype,
+        [_Location_parameterLocations]: null,
+        [_Location_name]: "children",
+        [_Location_column]: 9,
+        [_Location_line]: 48,
+        [_Location_file]: null
+      });
+    },
+    get C8() {
+      return C[8] = dart.constList([C[9] || CT.C9, C[10] || CT.C10, C[11] || CT.C11], widget_inspector._Location);
+    },
+    get C7() {
+      return C[7] = dart.const({
+        __proto__: widget_inspector._Location.prototype,
+        [_Location_parameterLocations]: C[8] || CT.C8,
+        [_Location_name]: null,
+        [_Location_column]: 13,
+        [_Location_line]: 45,
+        [_Location_file]: "file:///C:/Users/Mateus/Documents/Projetos/app_itr/lib/ui/TitleHome.dart"
+      });
+    },
+    get C14() {
+      return C[14] = dart.const({
+        __proto__: widget_inspector._Location.prototype,
+        [_Location_parameterLocations]: null,
+        [_Location_name]: "backgroundColor",
+        [_Location_column]: 7,
+        [_Location_line]: 44,
+        [_Location_file]: null
+      });
+    },
+    get C15() {
+      return C[15] = dart.const({
+        __proto__: widget_inspector._Location.prototype,
+        [_Location_parameterLocations]: null,
+        [_Location_name]: "body",
+        [_Location_column]: 7,
+        [_Location_line]: 45,
+        [_Location_file]: null
+      });
+    },
+    get C13() {
+      return C[13] = dart.constList([C[14] || CT.C14, C[15] || CT.C15], widget_inspector._Location);
+    },
+    get C12() {
+      return C[12] = dart.const({
+        __proto__: widget_inspector._Location.prototype,
+        [_Location_parameterLocations]: C[13] || CT.C13,
+        [_Location_name]: null,
+        [_Location_column]: 12,
+        [_Location_line]: 43,
+        [_Location_file]: "file:///C:/Users/Mateus/Documents/Projetos/app_itr/lib/ui/TitleHome.dart"
+      });
+    },
+    get C17() {
+      return C[17] = dart.constList([], widget_inspector._Location);
+    },
+    get C16() {
+      return C[16] = dart.const({
+        __proto__: widget_inspector._Location.prototype,
+        [_Location_parameterLocations]: C[17] || CT.C17,
+        [_Location_name]: null,
+        [_Location_column]: 120,
+        [_Location_line]: 71,
+        [_Location_file]: "file:///C:/Users/Mateus/Documents/Projetos/app_itr/lib/ui/TitleHome.dart"
+      });
+    },
+    get C18() {
+      return C[18] = dart.const({
+        __proto__: widget_inspector._Location.prototype,
+        [_Location_parameterLocations]: C[17] || CT.C17,
+        [_Location_name]: null,
+        [_Location_column]: 84,
+        [_Location_line]: 73,
+        [_Location_file]: "file:///C:/Users/Mateus/Documents/Projetos/app_itr/lib/ui/TitleHome.dart"
+      });
+    }
+  }, false);
+  var C = Array(19).fill(void 0);
+  var I = [
+    "package:app_itr/ui/TitleHome.dart",
+    "file:///C:/Users/Mateus/Documents/Projetos/app_itr/lib/ui/TitleHome.dart"
+  ];
+  TitleHome.TitleHome = class TitleHome$ extends framework.StatefulWidget {
+    createState() {
+      return new TitleHome._TitleHomeState.new();
+    }
+  };
+  (TitleHome.TitleHome.new = function(opts) {
+    let $36creationLocationd_0dea112b090073317d4 = opts && '$creationLocationd_0dea112b090073317d4' in opts ? opts.$creationLocationd_0dea112b090073317d4 : null;
+    TitleHome.TitleHome.__proto__.new.call(this, {$creationLocationd_0dea112b090073317d4: $36creationLocationd_0dea112b090073317d4});
+    ;
+  }).prototype = TitleHome.TitleHome.prototype;
+  dart.addTypeTests(TitleHome.TitleHome);
+  dart.addTypeCaches(TitleHome.TitleHome);
+  dart.setMethodSignature(TitleHome.TitleHome, () => ({
+    __proto__: dart.getMethods(TitleHome.TitleHome.__proto__),
+    createState: dart.fnType(TitleHome._TitleHomeState, [])
+  }));
+  dart.setLibraryUri(TitleHome.TitleHome, I[0]);
+  var ___TitleHomeState__loginDataStore = dart.privateName(TitleHome, "_#_TitleHomeState#_loginDataStore");
+  var _loginDataStore = dart.privateName(TitleHome, "_loginDataStore");
+  var _Location_parameterLocations = dart.privateName(widget_inspector, "_Location.parameterLocations");
+  var _Location_name = dart.privateName(widget_inspector, "_Location.name");
+  var _Location_column = dart.privateName(widget_inspector, "_Location.column");
+  var _Location_line = dart.privateName(widget_inspector, "_Location.line");
+  var _Location_file = dart.privateName(widget_inspector, "_Location.file");
+  var _getCities = dart.privateName(TitleHome, "_getCities");
+  const didChangeDependencies = Symbol("didChangeDependencies");
+  TitleHome._TitleHomeState = class _TitleHomeState extends framework.State$(TitleHome.TitleHome) {
+    get [_loginDataStore]() {
+      let t0;
+      t0 = this[___TitleHomeState__loginDataStore];
+      return t0 == null ? dart.throw(new _internal.LateError.fieldNI("_loginDataStore")) : t0;
+    }
+    set [_loginDataStore](t0) {
+      if (t0 == null) dart.nullFailed(I[1], 20, 23, "null");
+      this[___TitleHomeState__loginDataStore] = t0;
+    }
+    didChangeDependencies() {
+      return async.async(dart.void, (function* didChangeDependencies$() {
+        this[didChangeDependencies]();
+        this[_loginDataStore] = provider.Provider.of(login_data_store.LoginDataStore, this.context);
+        let u = dart.nullCheck(yield this.helper.getLoggedUser());
+        this[_loginDataStore].setUser(u);
+        if (u === null) {
+          this[_loginDataStore].loggedIn = false;
+        } else {
+          this[_loginDataStore].loggedIn = true;
+        }
+      }).bind(this));
+    }
+    build(context) {
+      if (context == null) dart.nullFailed(I[1], 42, 29, "context");
+      return new scaffold.Scaffold.new({backgroundColor: ThemeCTRM.ColorsCTRM.primaryColor, body: new basic.Column.new({mainAxisAlignment: flex.MainAxisAlignment.center, crossAxisAlignment: flex.CrossAxisAlignment.stretch, children: T.JSArrayOfWidget().of([new gesture_detector.GestureDetector.new({child: new image.Image.new({image: new image_resolution.AssetImage.new("assets/images/logo_verde.png"), $creationLocationd_0dea112b090073317d4: C[0] || CT.C0}), onTap: dart.fn(() => {
+              }, T.VoidTovoid()), $creationLocationd_0dea112b090073317d4: C[3] || CT.C3})]), $creationLocationd_0dea112b090073317d4: C[7] || CT.C7}), $creationLocationd_0dea112b090073317d4: C[12] || CT.C12});
+    }
+    initState() {
+      super.initState();
+      async.Timer.new(new core.Duration.new({seconds: 3}), dart.fn(() => {
+        this.rebuild();
+      }, T.VoidTovoid()));
+    }
+    rebuild() {
+      this.setState(dart.fn(() => async.async(dart.void, (function*() {
+        if (dart.test(this[_loginDataStore].loggedIn)) {
+          yield this[_getCities]().then(dart.dynamic, dart.fn(value => {
+            if (value == null) dart.nullFailed(I[1], 71, 34, "value");
+            return navigator.Navigator.pushReplacement(dart.dynamic, T.ObjectN(), this.context, new page.MaterialPageRoute.new({builder: dart.fn(context => {
+                if (context == null) dart.nullFailed(I[1], 71, 108, "context");
+                return new SelectCityPage.SelectCityPage.new({$creationLocationd_0dea112b090073317d4: C[16] || CT.C16});
+              }, T.BuildContextToSelectCityPage())}));
+          }, T.StringToFuture()));
+        } else {
+          navigator.Navigator.pushReplacement(dart.dynamic, T.ObjectN(), this.context, new page.MaterialPageRoute.new({builder: dart.fn(context => {
+              if (context == null) dart.nullFailed(I[1], 73, 72, "context");
+              return new LoginPage.LoginPage.new({$creationLocationd_0dea112b090073317d4: C[18] || CT.C18});
+            }, T.BuildContextToLoginPage())}));
+        }
+      }).bind(this)), T.VoidToFutureOfvoid()));
+    }
+    [_getCities]() {
+      return async.async(core.String, (function* _getCities() {
+        let response = (yield this.helper.getAllMunicipiosByUserList(this[_loginDataStore]));
+        core.print("GETCITIES RESPONSE -> " + dart.str(response));
+        return "Success";
+      }).bind(this));
+    }
+    [didChangeDependencies]() {
+      return super.didChangeDependencies();
+    }
+  };
+  (TitleHome._TitleHomeState.new = function() {
+    this.helper = db.DBHelper.new();
+    this[___TitleHomeState__loginDataStore] = null;
+    TitleHome._TitleHomeState.__proto__.new.call(this);
+    ;
+  }).prototype = TitleHome._TitleHomeState.prototype;
+  dart.addTypeTests(TitleHome._TitleHomeState);
+  dart.addTypeCaches(TitleHome._TitleHomeState);
+  dart.setMethodSignature(TitleHome._TitleHomeState, () => ({
+    __proto__: dart.getMethods(TitleHome._TitleHomeState.__proto__),
+    build: dart.fnType(framework.Widget, [framework.BuildContext]),
+    rebuild: dart.fnType(dart.void, []),
+    [_getCities]: dart.fnType(async.Future$(core.String), [])
+  }));
+  dart.setGetterSignature(TitleHome._TitleHomeState, () => ({
+    __proto__: dart.getGetters(TitleHome._TitleHomeState.__proto__),
+    [_loginDataStore]: login_data_store.LoginDataStore
+  }));
+  dart.setSetterSignature(TitleHome._TitleHomeState, () => ({
+    __proto__: dart.getSetters(TitleHome._TitleHomeState.__proto__),
+    [_loginDataStore]: login_data_store.LoginDataStore
+  }));
+  dart.setLibraryUri(TitleHome._TitleHomeState, I[0]);
+  dart.setFieldSignature(TitleHome._TitleHomeState, () => ({
+    __proto__: dart.getFields(TitleHome._TitleHomeState.__proto__),
+    helper: dart.fieldType(db.DBHelper),
+    [___TitleHomeState__loginDataStore]: dart.fieldType(dart.nullable(login_data_store.LoginDataStore))
+  }));
+  dart.trackLibraries("packages/app_itr/ui/TitleHome.dart", {
+    "package:app_itr/ui/TitleHome.dart": TitleHome
+  }, {
+  }, '{"version":3,"sourceRoot":"","sources":["TitleHome.dart"],"names":[],"mappings":";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;AAamC;IAAiB;;;;;;EACpD;;;;;;;;;;;;;;;;;;;;AAKsB;;IAAe;;;AAAf;IAAe;;AAIT;AACK,QAAvB;AAEgD,QAAtD,wBAA2B,sDAAmB;AACzC,gBAAkC,eAA7B,MAAM,AAAO;AAEG,QAA1B,AAAgB,8BAAQ,CAAC;AAGzB,YAAG,AAAE,CAAD;AAC8B,UAAhC,AAAgB,iCAAW;;AAEI,UAA/B,AAAgB,iCAAW;;MAG/B;;;UAG0B;AACxB,YAAO,6CACuB,yCACtB,yCACiC,mDACE,2CACrB,wBAChB,iDACW,4BAAa,oCAAW,iGACxB;;IAOnB;;AAImB,MAAX;AAGJ,MAFF,gBAAM,gCAAkB,KAAI;AACjB,QAAT;;IAEJ;;AASI,MANF,cAAS;AACP,sBAAG,AAAgB;AACiH,UAAlI,MAAM,AAAa,sCAAK;gBAAC;AAAW,kBAAU,gEAAgB,cAAS,yCAA2B;oBAAC;AAAY;;;;AAEvB,UAA9E,+DAAgB,cAAS,yCAA2B;kBAAC;AAAY;;;MAE9E;IACH;;AAEyB;AACnB,wBAAW,MAAM,AAAO,uCAA2B;AACf,QAAxC,WAAM,AAAiC,oCAAT,QAAQ;AACtC,cAAO;MACT;;;;;;;IA/DS,cAAS;8CACE;;;EA+DtB","file":"../../../../../../../packages/app_itr/ui/TitleHome.dart.lib.js"}');
+  // Exports:
+  return {
+    ui__TitleHome: TitleHome
+  };
+}));
+
+//# sourceMappingURL=TitleHome.dart.lib.js.map
