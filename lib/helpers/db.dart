@@ -1,21 +1,25 @@
 import 'dart:io';
 
 import 'package:app_itr/etc/DBColumnNames.dart';
+import 'package:app_itr/helpers/classes/AppData.dart';
 import 'package:app_itr/helpers/classes/EstradaPoint.dart';
+import 'package:app_itr/helpers/classes/ImovelDadosAbertos.dart';
 import 'package:app_itr/helpers/classes/ImovelRoute.dart';
 import 'package:app_itr/helpers/classes/ImovelGeoPoint.dart';
 import 'package:app_itr/helpers/classes/Levantamento.dart';
 import 'package:app_itr/helpers/classes/PontePoint.dart';
+import 'package:app_itr/helpers/classes/RegiaoAdministrativa.dart';
 import 'package:app_itr/helpers/classes/RotaEscolarPoint.dart';
 import 'package:app_itr/helpers/classes/imovel.dart';
 import 'package:app_itr/stores/login_data_store.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
-import 'classes/municipio.dart';
+import 'classes/Estado.dart';
+import 'classes/Municipio.dart';
 import 'classes/user.dart';
 
-final int version = 67;
+final int version = 163;
 
 class DBHelper {
   static final DBHelper _instance = DBHelper.internal();
@@ -51,6 +55,15 @@ class DBHelper {
 
       //open the newly created db
       db = await openDatabase(path, version: version, onCreate: (Database db, int newerVersion) async {
+
+        await db.execute("CREATE TABLE $appDataTable("
+            "$idColumn INTEGER PRIMARY KEY, "
+            "$idPushMessageColumn INTEGER UNIQUE,"
+            "$pushMessageColumn TEXT,"
+            "$cod_ibge_mColumn TEXT,"
+            "$isImoveisListByUFLoadedColumn INTEGER,"
+            "$isMunicipiosListByUFLoadedColumn INTEGER);");
+
         await db.execute("CREATE TABLE $userTable("
             "$idColumn INTEGER PRIMARY KEY, "
             "$idSistemaColumn INTEGER UNIQUE, "
@@ -65,6 +78,19 @@ class DBHelper {
             "$municipiosColumn TEXT,"
             "$tokenColumn TEXT);");
 
+        await db.execute("CREATE TABLE $regiaoAdministrativaTable("
+            "$idColumn INTEGER PRIMARY KEY,"
+            "$idSistemaColumn INTEGER UNIQUE,"
+            "$nomeRegAdmColumn TEXT,"
+            "$idSistemaMunicipioColumn INTEGER,"
+            "$cod_ibge_mColumn TEXT);");
+
+        await db.execute("CREATE TABLE $estadoTable("
+            "$idColumn INTEGER PRIMARY KEY,"
+            "$idSistemaColumn INTEGER UNIQUE,"
+            "$nomeEstadoColumn TEXT UNIQUE,"
+            "$sigla_ufColumn TEXT UNIQUE);");
+
         await db.execute("CREATE TABLE $municipioTable("
             "$idColumn INTEGER PRIMARY KEY,"
             "$idSistemaColumn INTEGER UNIQUE,"
@@ -73,6 +99,7 @@ class DBHelper {
             "$estadoColumn INTEGER,"
             "$sigla_ufColumn TEXT,"
             "$cod_ibge_mColumn TEXT,"
+            "$allDownloadedColumn INTEGER,"
             "$latitudeColumn TEXT,"
             "$longitudeColumn TEXT);");
 
@@ -161,6 +188,7 @@ class DBHelper {
             "$idLevantamentoColumn INTEGER,"
             "$idSistemaLevantamentoColumn INTEGER,"
             "$descricaoColumn TEXT,"
+            "$jurisdicaoColumn TEXT,"
             "$estadoConservacaoColumn TEXT,"
             "$materialColumn TEXT,"
             "$extensaoAproximadaColumn TEXT,"
@@ -177,6 +205,26 @@ class DBHelper {
             "$idSistemaPonteColumn INTEGER,"
             "$ponteImagePathColumn TEXT,"
             "$sincronizadoColumn INTEGER);");
+
+        await db.execute("CREATE TABLE $imovelDadosAbertosTable("
+            "$idColumn INTEGER PRIMARY KEY,"
+            "$idSistemaColumn INTEGER UNIQUE,"
+            "$idSistemaBaseConsolidadaColumn INTEGER UNIQUE,"
+            "$nomeImovelColumn TEXT,"
+            "$codImovelColumn TEXT,"
+            "$numCertifColumn TEXT,"
+            "$carColumn TEXT,"
+            "$regAdmColumn TEXT,"
+            "$cod_ibge_mColumn TEXT,"
+            "$geomMultipolygonColumn TEXT,"
+            "$sincronizadoColumn INTEGER,"
+            "$geomRotaColumn TEXT,"
+            "$coordenadas_imovelLatColumn REAL,"
+            "$coordenadas_imovelLngColumn REAL,"
+            "$coordenadas_sedeLatColumn REAL,"
+            "$coordenadas_sedeLngColumn REAL,"
+            "$latColumn REAL,"
+            "$lngColumn REAL);");
       });
 
       //set the new version to the copied db so you do not need to do it manually on your bundled database.db
@@ -187,6 +235,18 @@ class DBHelper {
   }
 
   // ---------------- SAVES
+
+  Future<AppData> saveAppData(AppData appData) async {
+    Database dbApp = (await db)!;
+    try {
+      appData.id = await dbApp.insert(appDataTable, appData.toMap());
+      return appData;
+    } catch (e) {
+      //print("ERROR SAVE USER: $e");
+      return updateAppData(appData);
+    }
+  }
+
   Future<User> saveUser(User user) async {
     Database dbUser = (await db)!;
     try {
@@ -221,6 +281,30 @@ class DBHelper {
     } catch (e) {
       //print("ERROR MUNICIPIO: $e");
       return getMunicipio(m.idSistema!);
+    }
+  }
+
+  Future<Estado?> saveEstado(Estado e) async {
+    Database dbEstado = (await db)!;
+
+    try {
+      e.id = await dbEstado.insert(estadoTable, e.toMap());
+      return e;
+    } catch (error) {
+      //print("ERROR MUNICIPIO: $e");
+      return getEstado(e);
+    }
+  }
+
+  Future<RegiaoAdministrativa?> saveRegiaoAdmnistrativa(RegiaoAdministrativa ra) async {
+    Database dbRA = (await db)!;
+
+    try {
+      ra.id = await dbRA.insert(regiaoAdministrativaTable, ra.toMap());
+      return ra;
+    } catch (e) {
+      //print("ERROR MUNICIPIO: $e");
+      return getRegiaoAdministrativa(ra.idSistema!);
     }
   }
 
@@ -378,7 +462,41 @@ class DBHelper {
     }
   }
 
+  Future<ImovelDadosAbertos> saveImovelDadosAbertos(ImovelDadosAbertos imovelDadosAbertos) async {
+    Database dbImovel = (await db)!;
+
+    try {
+      imovelDadosAbertos.id = await dbImovel.insert(imovelDadosAbertosTable, imovelDadosAbertos.toMap());
+      //print("IMOVEL SAVED: $imovelDadosAbertos");
+      return imovelDadosAbertos;
+    } catch (e) {
+      //print("ERROR MUNICIPIO: $e");
+      print("ERROR IMOVEL: $e");
+      return getImovelDadosAbertos(imovelDadosAbertos.idSistema!);
+    }
+  }
+
   // -------------- GET
+
+  Future<AppData?> getAppData() async {
+    Database dbApp = (await db)!;
+    List<Map> maps = await dbApp.query(appDataTable,
+        columns: [
+          idColumn,
+          idPushMessageColumn,
+          pushMessageColumn,
+          isImoveisListByUFLoadedColumn,
+          cod_ibge_mColumn,
+          isMunicipiosListByUFLoadedColumn,
+        ],
+        where: "$idColumn = ?",
+        whereArgs: ['1']);
+    if (maps.length > 0) {
+      return AppData.fromMap(maps.first);
+    } else {
+      return null;
+    }
+  }
 
   Future<User?> getUser(int id) async {
     Database dbUser = (await db)!;
@@ -420,8 +538,8 @@ class DBHelper {
   }
 
   Future<Municipio?> getMunicipio(int id) async {
-    Database dbMunicipior = (await db)!;
-    List<Map> maps = await dbMunicipior.query(municipioTable,
+    Database dbMunicipio = (await db)!;
+    List<Map> maps = await dbMunicipio.query(municipioTable,
         columns: [
           idColumn,
           idSistemaColumn,
@@ -432,6 +550,7 @@ class DBHelper {
           cod_ibge_mColumn,
           latitudeColumn,
           longitudeColumn,
+          allDownloadedColumn,
         ],
         where: "$idSistemaColumn = ?",
         whereArgs: [id]);
@@ -442,28 +561,110 @@ class DBHelper {
     }
   }
 
+  Future<Municipio?> getMunicipioByCodIbge(String cod_ibge_m) async {
+    Database dbMunicipio = (await db)!;
+    List<Map> maps = await dbMunicipio.query(municipioTable,
+        columns: [
+          idColumn,
+          idSistemaColumn,
+          nomeMunicipioColumn,
+          slugColumn,
+          estadoColumn,
+          sigla_ufColumn,
+          cod_ibge_mColumn,
+          latitudeColumn,
+          longitudeColumn,
+          allDownloadedColumn,
+        ],
+        where: "$cod_ibge_mColumn = ?",
+        whereArgs: [cod_ibge_m]);
+
+    print("MAPS -> $maps");
+    if (maps.length > 0) {
+      return Municipio.fromMap(maps.first);
+    } else {
+      return null;
+    }
+  }
+
+  Future<Estado?> getEstado(Estado estado) async {
+    Database dbEstado = (await db)!;
+    List<Map> maps = await dbEstado.query(estadoTable,
+        columns: [
+          idColumn,
+          idSistemaColumn,
+          nomeEstadoColumn,
+          sigla_ufColumn,
+        ],
+        where: "$idSistemaColumn = ?",
+        whereArgs: [estado.idSistema]);
+    if (maps.length > 0) {
+      return Estado.fromMap(maps.first);
+    } else {
+      return null;
+    }
+  }
+
+  Future<Estado?> getEstadoByUF(String uf) async {
+    Database dbEstado = (await db)!;
+    List<Map> maps = await dbEstado.query(estadoTable,
+        columns: [
+          idColumn,
+          idSistemaColumn,
+          nomeEstadoColumn,
+          sigla_ufColumn,
+        ],
+        where: "$sigla_ufColumn = ?",
+        whereArgs: [uf]);
+    if (maps.length > 0) {
+      return Estado.fromMap(maps.first);
+    } else {
+      return null;
+    }
+  }
+
+
+  Future<RegiaoAdministrativa?> getRegiaoAdministrativa(int id) async {
+    Database dbRA = (await db)!;
+    List<Map> maps = await dbRA.query(regiaoAdministrativaTable,
+        columns: [
+          idColumn,
+          idSistemaColumn,
+          nomeRegAdmColumn,
+          idSistemaMunicipioColumn,
+          cod_ibge_mColumn,
+        ],
+        where: "$idSistemaColumn = ?",
+        whereArgs: [id]);
+    if (maps.length > 0) {
+      return RegiaoAdministrativa.fromMap(maps.first);
+    } else {
+      return null;
+    }
+  }
+
   Future<ImovelGeoPoint?> getGeoPoint(int id) async {
-      Database dbGeo = (await db)!;
-      List<Map> maps = await dbGeo.query(geoPointTable,
-          columns: [
-            idColumn,
-            idSistemaColumn,
-            idLevantamentoColumn,
-            idSistemaLevantamentoColumn,
-            tipoColumn,
-            descricaoColumn,
-            cod_ibge_mColumn,
-            sincronizadoColumn,
-            latColumn,
-            lngColumn,
-          ],
-          where: "$idColumn = ?",
-          whereArgs: [id]);
-      if (maps.length > 0) {
-        return ImovelGeoPoint.fromMap(maps.first);
-      } else {
-        return null;
-      }
+    Database dbGeo = (await db)!;
+    List<Map> maps = await dbGeo.query(geoPointTable,
+        columns: [
+          idColumn,
+          idSistemaColumn,
+          idLevantamentoColumn,
+          idSistemaLevantamentoColumn,
+          tipoColumn,
+          descricaoColumn,
+          cod_ibge_mColumn,
+          sincronizadoColumn,
+          latColumn,
+          lngColumn,
+        ],
+        where: "$idColumn = ?",
+        whereArgs: [id]);
+    if (maps.length > 0) {
+      return ImovelGeoPoint.fromMap(maps.first);
+    } else {
+      return null;
+    }
   }
 
   Future<Imovel?> getImovel(int id) async {
@@ -598,6 +799,7 @@ class DBHelper {
           idLevantamentoColumn,
           idSistemaLevantamentoColumn,
           descricaoColumn,
+          jurisdicaoColumn,
           estadoConservacaoColumn,
           materialColumn,
           extensaoAproximadaColumn,
@@ -636,6 +838,69 @@ class DBHelper {
     }
   }
 
+  Future<ImovelDadosAbertos> getImovelDadosAbertos(int id) async {
+    Database dbImovel = (await db)!;
+    List<Map> maps = await dbImovel.query(imovelDadosAbertosTable,
+        columns: [
+          idColumn,
+          idSistemaColumn,
+          idSistemaBaseConsolidadaColumn,
+          nomeImovelColumn,
+          codImovelColumn,
+          numCertifColumn,
+          carColumn,
+          regAdmColumn,
+          cod_ibge_mColumn,
+          sincronizadoColumn,
+          latColumn,
+          lngColumn,
+          geomMultipolygonColumn,
+          geomRotaColumn,
+          coordenadas_imovelLatColumn,
+          coordenadas_imovelLngColumn,
+          coordenadas_sedeLatColumn,
+          coordenadas_sedeLngColumn,
+        ],
+        where: "$idSistemaColumn = ?",
+        whereArgs: [id]);
+    if (maps.length > 0) {
+      return ImovelDadosAbertos.fromMap(maps.first);
+    } else {
+      return ImovelDadosAbertos();
+    }
+  }
+
+  Future<ImovelDadosAbertos> getImovelDadosAbertosByPolygonID(int idPolygon) async {
+    Database dbImovel = (await db)!;
+    List<Map> maps = await dbImovel.query(imovelDadosAbertosTable,
+        columns: [
+          idColumn,
+          idSistemaColumn,
+          idSistemaBaseConsolidadaColumn,
+          nomeImovelColumn,
+          codImovelColumn,
+          numCertifColumn,
+          carColumn,
+          regAdmColumn,
+          cod_ibge_mColumn,
+          sincronizadoColumn,
+          latColumn,
+          lngColumn,
+          geomMultipolygonColumn,
+          geomRotaColumn,
+          coordenadas_imovelLatColumn,
+          coordenadas_imovelLngColumn,
+          coordenadas_sedeLatColumn,
+          coordenadas_sedeLngColumn,
+        ],
+        where: "$idSistemaBaseConsolidadaColumn = ?",
+        whereArgs: [idPolygon]);
+    if (maps.length > 0) {
+      return ImovelDadosAbertos.fromMap(maps.first);
+    } else {
+      return ImovelDadosAbertos();
+    }
+  }
 
   // ----------------- DELETES
 
@@ -662,10 +927,31 @@ class DBHelper {
       getAllPonteImagesByPontePoint(store.selectedPontePoint!, store);
 
     });
+  }
 
+  Future<int> deleteAllMunicipios(LoginDataStore store) async {
+    Database dbMunicipio = (await db)!;
+    return await dbMunicipio.delete(municipioTable);
+  }
+
+  Future<int> deleteAllEstados(LoginDataStore store) async {
+    Database dbEstado = (await db)!;
+    return await dbEstado.delete(estadoTable);
   }
 
   // ----------------- UPDATES
+
+  Future<AppData> updateAppData(AppData appData) async {
+    Database dbApp = (await db)!;
+    try {
+      appData.id = await dbApp
+          .update(appDataTable, appData.toMap(), where: "$idColumn = ?", whereArgs: [appData.id]);
+      return appData;
+    } catch (e) {
+      print("ERROR UPDATE APP DATA: $e");
+      return appData;
+    }
+  }
 
   Future<User> updateUser(User user) async {
     Database dbUser = (await db)!;
@@ -787,6 +1073,18 @@ class DBHelper {
     }
   }
 
+  Future<ImovelDadosAbertos> updateImovelDadosAbertos(ImovelDadosAbertos imovelDadosAbertos) async {
+    Database dbImovel = (await db)!;
+    try {
+      imovelDadosAbertos.id = await dbImovel
+          .update(imovelDadosAbertosTable, imovelDadosAbertos.toMap(), where: "$idColumn = ?", whereArgs: [imovelDadosAbertos.id]);
+      return imovelDadosAbertos;
+    } catch (e) {
+      print("ERROR UPDATE DADOS ABERTOS: $e --> $imovelDadosAbertos");
+      return imovelDadosAbertos;
+    }
+  }
+
 
   // -------------------- GET LISTS
 
@@ -815,6 +1113,70 @@ class DBHelper {
     return listMunicipio;
   }
 
+  Future<List> getAllMunicipiosByUF(LoginDataStore store) async {
+    Database dbMunicipio = (await db)!;
+    List listMap = await dbMunicipio.rawQuery("SELECT * FROM $municipioTable WHERE $sigla_ufColumn = '${store.m.sigla_uf}'");
+    List listMunicipio = [];
+    store.clearMunicipioList();
+
+    for (Map m in listMap) {
+      print("Map m -> $m");
+      store.addMunicipioList(Municipio.fromMap(m));
+    }
+    store.municipiosList.sort((a, b) => a.nome!.compareTo(b.nome!));
+    return listMunicipio;
+  }
+
+  Future<List> getAllMunicipiosByUFOffline(LoginDataStore store, String uf) async {
+    Database dbMunicipio = (await db)!;
+    List listMap = await dbMunicipio.rawQuery("SELECT * FROM $municipioTable WHERE $sigla_ufColumn = '$uf'");
+    List listMunicipio = [];
+    store.clearMunicipioList();
+
+    for (Map m in listMap) {
+      print("Map m -> $m");
+      store.addMunicipioList(Municipio.fromMap(m));
+    }
+    store.municipiosList.sort((a, b) => a.nome!.compareTo(b.nome!));
+    store.setMunicipio(store.municipiosList.first);
+    return listMunicipio;
+  }
+
+  Future<List> getAllEstados(LoginDataStore store) async {
+    Database dbEstado = (await db)!;
+    List listMap = await dbEstado.rawQuery("SELECT * FROM $estadoTable");
+    List listEstados = [];
+    store.clearEstadosList();
+
+    for (Map m in listMap) {
+      print("Map m -> $m");
+      store.addEstadoList(Estado.fromMap(m));
+    }
+    return store.estadosList;
+  }
+
+  Future<List> getAllRegAdmByCodIbgeM(LoginDataStore store, String cod_ibge_m) async {
+    Database dbRA = (await db)!;
+    List listMap = await dbRA.rawQuery("SELECT * FROM $regiaoAdministrativaTable WHERE $cod_ibge_mColumn = '$cod_ibge_m'");
+    List todas = await dbRA.rawQuery("SELECT * FROM $regiaoAdministrativaTable WHERE $nomeRegAdmColumn = 'TODAS'");
+    List listRegAdm = [];
+
+    store.clearRegAdmList();
+
+    for (Map m in todas) {
+      print("Map m -> $m");
+      store.addRegAdmList(RegiaoAdministrativa.fromMap(m));
+    }
+
+    for (Map m in listMap) {
+      print("Map m -> $m");
+      store.addRegAdmList(RegiaoAdministrativa.fromMap(m));
+    }
+
+    store.setRegAdm(store.regiaoAdministrativaList.first);
+
+    return store.regiaoAdministrativaList;
+  }
 
   Future<List> getAllAsyncGeoPoints(LoginDataStore store) async {
     Database dbGeoPoint = (await db)!;
@@ -1104,5 +1466,78 @@ class DBHelper {
 
   }
 
+  Future getAllImoveisDadosAbertosByMunicipio(LoginDataStore store) async {
+    Database? dbImovel = (await db)!;
+    String? cod_ibge_m = store.m.cod_ibge_m;
+    List listMap = [];
 
+    print("LIST-MAP here -> $listMap");
+    store.clearImovelDadosAbertos();
+
+    if(store.regAdm.nome == "TODAS"){
+      listMap = await dbImovel.rawQuery("SELECT * FROM $imovelDadosAbertosTable WHERE $cod_ibge_mColumn "
+          "= ?", ['$cod_ibge_m']);
+    } else{
+      listMap = await dbImovel.rawQuery("SELECT * FROM $imovelDadosAbertosTable WHERE $cod_ibge_mColumn "
+          "= ? AND $regAdmColumn = ?", ['$cod_ibge_m', '${store.regAdm.idSistema}']);
+    }
+
+    for (Map m in listMap) {
+      ImovelDadosAbertos im = ImovelDadosAbertos.fromMap(m);
+      //print("REACHED -> ${im.nome_imovel} - ${im.idSistemaBaseConsolidada}");
+      store.addImovelDadosAbertos(im);
+    }
+
+    print("QTD IMOVEIS BAIXADOS =>  ${store.imovelDadosAbertosList.length}");
+
+  }
+
+
+  Future<bool> checkIfHasImoveisByCodIbge(LoginDataStore store) async {
+    Database? dbImovel = (await db)!;
+    String? cod_ibge_m = store.m.cod_ibge_m;
+    List listMap = [];
+
+    if(store.regAdm.nome == "TODAS"){
+      listMap = await dbImovel.rawQuery("SELECT * FROM $imovelDadosAbertosTable WHERE $cod_ibge_mColumn "
+          "= ?", ['$cod_ibge_m']);
+    } else{
+      listMap = await dbImovel.rawQuery("SELECT * FROM $imovelDadosAbertosTable WHERE $cod_ibge_mColumn "
+          "= ? AND $regAdmColumn = ?", ['$cod_ibge_m', '${store.regAdm.idSistema}']);
+    }
+
+    if(listMap.isNotEmpty){
+      print("HAS IMOVEL");
+      return true;
+    } else{
+      print("IT DOES NOT HAVE IMOVEL");
+      return false;
+    }
+  }
+
+  Future<bool> checkIfHasMunicipiosByUF(LoginDataStore store, String uf) async {
+    Database? dbMunicipios = (await db)!;
+    List listMap = await dbMunicipios.rawQuery("SELECT * FROM $municipioTable WHERE $sigla_ufColumn "
+        "= ?", ['$uf']);
+    if(listMap.isNotEmpty){
+      print("HAS MUNICIPIO");
+      return true;
+    } else{
+      print("IT DOES NOT HAVE MUNICIPIO");
+      return false;
+    }
+  }
+
+  Future<bool> checkIfHasRegAdmByCodIbgeM(LoginDataStore store, String cod_ibge_m) async {
+    Database? dbRA = (await db)!;
+    List listMap = await dbRA.rawQuery("SELECT * FROM $regiaoAdministrativaTable WHERE $cod_ibge_mColumn "
+        "= ?", ['$cod_ibge_m']);
+    if(listMap.isNotEmpty){
+      print("HAS REG ADM");
+      return true;
+    } else{
+      print("IT DOES NOT HAVE REG ADM");
+      return false;
+    }
+  }
 }

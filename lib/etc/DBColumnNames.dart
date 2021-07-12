@@ -1,6 +1,11 @@
 //DATABASE
+import 'package:app_itr/helpers/classes/ImovelDadosAbertos.dart';
+
+final String appDataTable = "AppDataTable";
 final String userTable = "UserTable";
 final String municipioTable = "MunicipioTable";
+final String estadoTable = "EstadoTable";
+final String regiaoAdministrativaTable = "RegiaoAdministrativaTable";
 final String loggedUserTable = "LoggedUserTable";
 final String geoPointTable = "geoPointTable";
 final String routeTable = "routeTable";
@@ -10,9 +15,15 @@ final String estradaPointTable = "estradaPointTable";
 final String rotaEscolarPointTable = "rotaEscolarPointTable";
 final String pontePointTable = "pontePointTable";
 final String ponteImageTable = "ponteImageTable";
+final String imovelDadosAbertosTable = "imovelDadosAbertosTable";
 
 final String idColumn = 'idColumn';
 final String idSistemaColumn = 'idSistemaColumn';
+final String idPushMessageColumn = 'idPushMessageColumn';
+final String pushMessageColumn = 'pushMessageColumn';
+final String isMunicipiosListByUFLoadedColumn = 'isMunicipiosListByUFLoadedColumn';
+final String isImoveisListByUFLoadedColumn = 'isImoveisListByUFLoadedColumn';
+
 
 //IMOVEL
 final String idImovelColumn = 'idColumn';
@@ -46,6 +57,13 @@ final String sigla_ufColumn = 'sigla_ufColumn';
 final String cod_ibge_mColumn = 'cod_ibge_mColumn';
 final String latitudeColumn = 'latitudeColumn';
 final String longitudeColumn = 'longitudeColumn';
+final String allDownloadedColumn = 'allDownloadedColumn';
+
+//ESTADO
+final String nomeEstadoColumn = 'nomeEstadoColumn';
+
+//REGIÃO ADMINISTRATIVA
+final String nomeRegAdmColumn = 'nomeRegAdmColumn';
 
 //USER
 final String userColumn = 'userColumn';
@@ -81,3 +99,14 @@ final String extensaoAproximadaColumn = 'extensaoAproximadaColumn';
 final String idPonteColumn = 'idPonteColumn';
 final String idSistemaPonteColumn = 'idSistemaPonteColumn';
 final String ponteImagePathColumn = 'ponteImagePathColumn';
+
+// DADOS ABERTOS
+final String idSistemaBaseConsolidadaColumn = 'idSistemaBaseConsolidadaColumn';
+final String nomeImovelColumn = 'nomeImovelColumn';
+final String codImovelColumn = 'codImovelColumn';
+final String carColumn = 'carColumn';
+final String numCertifColumn = 'numCertifColumn';
+final String regAdmColumn = 'regAdmColumn';
+final String geomMultipolygonColumn = 'geomMultipolygonColumn';
+final String geomRotaColumn = 'geomRotaColumn';
+

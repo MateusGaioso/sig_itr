@@ -22,15 +22,22 @@ class ColorsCTRM {
 
 class FontsStyleCTRM{
   static TextStyle primaryFontWhite = GoogleFonts.concertOne(color: Colors.white);
+  static TextStyle primaryFontWhiteHeight = GoogleFonts.concertOne(color: Colors.white, height: 1.1);
+  static TextStyle primaryFont16WhiteHeight = GoogleFonts.concertOne(color: Colors.white, fontSize: 16, height: 1.1);
+  static TextStyle primaryFont17White = GoogleFonts.concertOne(color: Colors.white, fontSize: 17,);
   static TextStyle primaryFont19White = GoogleFonts.concertOne(color: Colors.white, fontSize: 19,);
+  static TextStyle primaryFont19WhiteHeight = GoogleFonts.concertOne(color: Colors.white, fontSize: 19, height: 1.1);
+  static TextStyle primaryFont22White = GoogleFonts.concertOne(color: Colors.white, fontSize: 22,);
   static TextStyle primaryFont = GoogleFonts.concertOne(color: ColorsCTRM.primaryColorSuperDark);
   static TextStyle primaryFontMiniWhite = GoogleFonts.concertOne(color: Colors.white, fontSize: 13,);
+  static TextStyle primaryFont11White = GoogleFonts.concertOne(color: Colors.white, fontSize: 11,);
   static TextStyle primaryFont18Dark= GoogleFonts.concertOne(color: ColorsCTRM.primaryColorDark, fontSize: 18);
+  static TextStyle robotoFont18Dark= GoogleFonts.roboto(color: ColorsCTRM.primaryColorDark, fontSize: 18);
   static TextStyle primaryFont25SuperDark = GoogleFonts.concertOne(fontSize: 25, color: ColorsCTRM.primaryColorSuperDark);
-  static TextStyle primaryFont20Dark = GoogleFonts.concertOne(color: ColorsCTRM.primaryColorDark, fontSize: 20);
+  static TextStyle primaryFont20Dark = GoogleFonts.concertOne(color: ColorsCTRM.primaryColorDark, fontSize: 20, height: 1.1);
   static TextStyle primaryFontBoldBlack = GoogleFonts.concertOne(fontWeight: FontWeight.bold);
   static TextStyle primaryFontBlack = GoogleFonts.concertOne();
-  static TextStyle primaryFontListSpacing = GoogleFonts.concertOne(textStyle: TextStyle(color: Colors.white, letterSpacing: 1));
+  static TextStyle primaryFontListSpacing = GoogleFonts.concertOne(textStyle: TextStyle(color: Colors.white, letterSpacing: 1, height: 1.1));
   static TextStyle primaryFontListSpacingGreen = GoogleFonts.concertOne(textStyle: TextStyle(color: Colors.lightGreenAccent, letterSpacing: 1));
   static TextStyle primaryFontListSpacingBlue = GoogleFonts.concertOne(textStyle: TextStyle(color: Colors.lightBlueAccent, letterSpacing: 1));
 }

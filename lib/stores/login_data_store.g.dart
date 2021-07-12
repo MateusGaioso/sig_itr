@@ -23,6 +23,42 @@ mixin _$LoginDataStore on _LoginDataStore, Store {
       (_$isCidadeValidComputed ??= Computed<bool>(() => super.isCidadeValid,
               name: '_LoginDataStore.isCidadeValid'))
           .value;
+  Computed<bool>? _$isMunicipioLoadingComputed;
+
+  @override
+  bool get isMunicipioLoading => (_$isMunicipioLoadingComputed ??=
+          Computed<bool>(() => super.isMunicipioLoading,
+              name: '_LoginDataStore.isMunicipioLoading'))
+      .value;
+  Computed<bool>? _$isRegAdmLoadingComputed;
+
+  @override
+  bool get isRegAdmLoading =>
+      (_$isRegAdmLoadingComputed ??= Computed<bool>(() => super.isRegAdmLoading,
+              name: '_LoginDataStore.isRegAdmLoading'))
+          .value;
+  Computed<bool>? _$isMunicipioLocalizedChangedComputed;
+
+  @override
+  bool get isMunicipioLocalizedChanged =>
+      (_$isMunicipioLocalizedChangedComputed ??= Computed<bool>(
+              () => super.isMunicipioLocalizedChanged,
+              name: '_LoginDataStore.isMunicipioLocalizedChanged'))
+          .value;
+  Computed<bool>? _$isDefaultMunicipioComputed;
+
+  @override
+  bool get isDefaultMunicipio => (_$isDefaultMunicipioComputed ??=
+          Computed<bool>(() => super.isDefaultMunicipio,
+              name: '_LoginDataStore.isDefaultMunicipio'))
+      .value;
+  Computed<bool>? _$isImoveisListToStartComputed;
+
+  @override
+  bool get isImoveisListToStart => (_$isImoveisListToStartComputed ??=
+          Computed<bool>(() => super.isImoveisListToStart,
+              name: '_LoginDataStore.isImoveisListToStart'))
+      .value;
   Computed<int>? _$tipoSelectedComputed;
 
   @override
@@ -116,6 +152,14 @@ mixin _$LoginDataStore on _LoginDataStore, Store {
           () => super.hasSelectedRoute,
           name: '_LoginDataStore.hasSelectedRoute'))
       .value;
+  Computed<bool>? _$hasSelectedImovelDadosAbertosComputed;
+
+  @override
+  bool get hasSelectedImovelDadosAbertos =>
+      (_$hasSelectedImovelDadosAbertosComputed ??= Computed<bool>(
+              () => super.hasSelectedImovelDadosAbertos,
+              name: '_LoginDataStore.hasSelectedImovelDadosAbertos'))
+          .value;
   Computed<bool>? _$isRouteDoneComputed;
 
   @override
@@ -223,6 +267,71 @@ mixin _$LoginDataStore on _LoginDataStore, Store {
           Computed<bool>(() => super.isPonteCaptureStarted,
               name: '_LoginDataStore.isPonteCaptureStarted'))
       .value;
+  Computed<bool>? _$isImovelSearchingComputed;
+
+  @override
+  bool get isImovelSearching => (_$isImovelSearchingComputed ??= Computed<bool>(
+          () => super.isImovelSearching,
+          name: '_LoginDataStore.isImovelSearching'))
+      .value;
+  Computed<bool>? _$isMunicipioJSFileLoadedComputed;
+
+  @override
+  bool get isMunicipioJSFileLoaded => (_$isMunicipioJSFileLoadedComputed ??=
+          Computed<bool>(() => super.isMunicipioJSFileLoaded,
+              name: '_LoginDataStore.isMunicipioJSFileLoaded'))
+      .value;
+  Computed<bool>? _$isImovelCounterFinishedComputed;
+
+  @override
+  bool get isImovelCounterFinished => (_$isImovelCounterFinishedComputed ??=
+          Computed<bool>(() => super.isImovelCounterFinished,
+              name: '_LoginDataStore.isImovelCounterFinished'))
+      .value;
+  Computed<bool>? _$isImovelPolygonsCounterFinishedComputed;
+
+  @override
+  bool get isImovelPolygonsCounterFinished =>
+      (_$isImovelPolygonsCounterFinishedComputed ??= Computed<bool>(
+              () => super.isImovelPolygonsCounterFinished,
+              name: '_LoginDataStore.isImovelPolygonsCounterFinished'))
+          .value;
+  Computed<bool>? _$isImovelDataLoadedComputed;
+
+  @override
+  bool get isImovelDataLoaded => (_$isImovelDataLoadedComputed ??=
+          Computed<bool>(() => super.isImovelDataLoaded,
+              name: '_LoginDataStore.isImovelDataLoaded'))
+      .value;
+  Computed<bool>? _$isImoveisDownloadStartedComputed;
+
+  @override
+  bool get isImoveisDownloadStarted => (_$isImoveisDownloadStartedComputed ??=
+          Computed<bool>(() => super.isImoveisDownloadStarted,
+              name: '_LoginDataStore.isImoveisDownloadStarted'))
+      .value;
+  Computed<bool>? _$showOfflineMessageComputed;
+
+  @override
+  bool get showOfflineMessage => (_$showOfflineMessageComputed ??=
+          Computed<bool>(() => super.showOfflineMessage,
+              name: '_LoginDataStore.showOfflineMessage'))
+      .value;
+
+  final _$appDataAtom = Atom(name: '_LoginDataStore.appData');
+
+  @override
+  AppData get appData {
+    _$appDataAtom.reportRead();
+    return super.appData;
+  }
+
+  @override
+  set appData(AppData value) {
+    _$appDataAtom.reportWrite(value, super.appData, () {
+      super.appData = value;
+    });
+  }
 
   final _$mAtom = Atom(name: '_LoginDataStore.m');
 
@@ -236,6 +345,113 @@ mixin _$LoginDataStore on _LoginDataStore, Store {
   set m(Municipio value) {
     _$mAtom.reportWrite(value, super.m, () {
       super.m = value;
+    });
+  }
+
+  final _$eAtom = Atom(name: '_LoginDataStore.e');
+
+  @override
+  Estado get e {
+    _$eAtom.reportRead();
+    return super.e;
+  }
+
+  @override
+  set e(Estado value) {
+    _$eAtom.reportWrite(value, super.e, () {
+      super.e = value;
+    });
+  }
+
+  final _$regAdmAtom = Atom(name: '_LoginDataStore.regAdm');
+
+  @override
+  RegiaoAdministrativa get regAdm {
+    _$regAdmAtom.reportRead();
+    return super.regAdm;
+  }
+
+  @override
+  set regAdm(RegiaoAdministrativa value) {
+    _$regAdmAtom.reportWrite(value, super.regAdm, () {
+      super.regAdm = value;
+    });
+  }
+
+  final _$municipiosLoadingAtom =
+      Atom(name: '_LoginDataStore.municipiosLoading');
+
+  @override
+  bool get municipiosLoading {
+    _$municipiosLoadingAtom.reportRead();
+    return super.municipiosLoading;
+  }
+
+  @override
+  set municipiosLoading(bool value) {
+    _$municipiosLoadingAtom.reportWrite(value, super.municipiosLoading, () {
+      super.municipiosLoading = value;
+    });
+  }
+
+  final _$regAdmLoadingAtom = Atom(name: '_LoginDataStore.regAdmLoading');
+
+  @override
+  bool get regAdmLoading {
+    _$regAdmLoadingAtom.reportRead();
+    return super.regAdmLoading;
+  }
+
+  @override
+  set regAdmLoading(bool value) {
+    _$regAdmLoadingAtom.reportWrite(value, super.regAdmLoading, () {
+      super.regAdmLoading = value;
+    });
+  }
+
+  final _$municipioLocalizeAtom =
+      Atom(name: '_LoginDataStore.municipioLocalize');
+
+  @override
+  bool get municipioLocalize {
+    _$municipioLocalizeAtom.reportRead();
+    return super.municipioLocalize;
+  }
+
+  @override
+  set municipioLocalize(bool value) {
+    _$municipioLocalizeAtom.reportWrite(value, super.municipioLocalize, () {
+      super.municipioLocalize = value;
+    });
+  }
+
+  final _$defaultMunicipioAtom = Atom(name: '_LoginDataStore.defaultMunicipio');
+
+  @override
+  bool get defaultMunicipio {
+    _$defaultMunicipioAtom.reportRead();
+    return super.defaultMunicipio;
+  }
+
+  @override
+  set defaultMunicipio(bool value) {
+    _$defaultMunicipioAtom.reportWrite(value, super.defaultMunicipio, () {
+      super.defaultMunicipio = value;
+    });
+  }
+
+  final _$offlineMessageAtom = Atom(name: '_LoginDataStore.offlineMessage');
+
+  @override
+  bool get offlineMessage {
+    _$offlineMessageAtom.reportRead();
+    return super.offlineMessage;
+  }
+
+  @override
+  set offlineMessage(bool value) {
+    _$offlineMessageAtom.reportWrite(value, super.offlineMessage, () {
+      super.offlineMessage = value;
     });
   }
 
@@ -607,6 +823,23 @@ mixin _$LoginDataStore on _LoginDataStore, Store {
   set selectedImovelRoute(ImovelRoute value) {
     _$selectedImovelRouteAtom.reportWrite(value, super.selectedImovelRoute, () {
       super.selectedImovelRoute = value;
+    });
+  }
+
+  final _$selectedImovelDadosAbertosAtom =
+      Atom(name: '_LoginDataStore.selectedImovelDadosAbertos');
+
+  @override
+  ImovelDadosAbertos get selectedImovelDadosAbertos {
+    _$selectedImovelDadosAbertosAtom.reportRead();
+    return super.selectedImovelDadosAbertos;
+  }
+
+  @override
+  set selectedImovelDadosAbertos(ImovelDadosAbertos value) {
+    _$selectedImovelDadosAbertosAtom
+        .reportWrite(value, super.selectedImovelDadosAbertos, () {
+      super.selectedImovelDadosAbertos = value;
     });
   }
 
@@ -1083,6 +1316,21 @@ mixin _$LoginDataStore on _LoginDataStore, Store {
     });
   }
 
+  final _$ponteJurisdicaoAtom = Atom(name: '_LoginDataStore.ponteJurisdicao');
+
+  @override
+  String get ponteJurisdicao {
+    _$ponteJurisdicaoAtom.reportRead();
+    return super.ponteJurisdicao;
+  }
+
+  @override
+  set ponteJurisdicao(String value) {
+    _$ponteJurisdicaoAtom.reportWrite(value, super.ponteJurisdicao, () {
+      super.ponteJurisdicao = value;
+    });
+  }
+
   final _$ponteMaterialAtom = Atom(name: '_LoginDataStore.ponteMaterial');
 
   @override
@@ -1194,8 +1442,207 @@ mixin _$LoginDataStore on _LoginDataStore, Store {
     });
   }
 
+  final _$searchImovelValueAtom =
+      Atom(name: '_LoginDataStore.searchImovelValue');
+
+  @override
+  String get searchImovelValue {
+    _$searchImovelValueAtom.reportRead();
+    return super.searchImovelValue;
+  }
+
+  @override
+  set searchImovelValue(String value) {
+    _$searchImovelValueAtom.reportWrite(value, super.searchImovelValue, () {
+      super.searchImovelValue = value;
+    });
+  }
+
+  final _$searchStartedAtom = Atom(name: '_LoginDataStore.searchStarted');
+
+  @override
+  bool get searchStarted {
+    _$searchStartedAtom.reportRead();
+    return super.searchStarted;
+  }
+
+  @override
+  set searchStarted(bool value) {
+    _$searchStartedAtom.reportWrite(value, super.searchStarted, () {
+      super.searchStarted = value;
+    });
+  }
+
+  final _$municipioJSFilesLoadedAtom =
+      Atom(name: '_LoginDataStore.municipioJSFilesLoaded');
+
+  @override
+  bool get municipioJSFilesLoaded {
+    _$municipioJSFilesLoadedAtom.reportRead();
+    return super.municipioJSFilesLoaded;
+  }
+
+  @override
+  set municipioJSFilesLoaded(bool value) {
+    _$municipioJSFilesLoadedAtom
+        .reportWrite(value, super.municipioJSFilesLoaded, () {
+      super.municipioJSFilesLoaded = value;
+    });
+  }
+
+  final _$startImoveisDownloadAtom =
+      Atom(name: '_LoginDataStore.startImoveisDownload');
+
+  @override
+  bool get startImoveisDownload {
+    _$startImoveisDownloadAtom.reportRead();
+    return super.startImoveisDownload;
+  }
+
+  @override
+  set startImoveisDownload(bool value) {
+    _$startImoveisDownloadAtom.reportWrite(value, super.startImoveisDownload,
+        () {
+      super.startImoveisDownload = value;
+    });
+  }
+
+  final _$totalImoveisDownloadAtom =
+      Atom(name: '_LoginDataStore.totalImoveisDownload');
+
+  @override
+  int get totalImoveisDownload {
+    _$totalImoveisDownloadAtom.reportRead();
+    return super.totalImoveisDownload;
+  }
+
+  @override
+  set totalImoveisDownload(int value) {
+    _$totalImoveisDownloadAtom.reportWrite(value, super.totalImoveisDownload,
+        () {
+      super.totalImoveisDownload = value;
+    });
+  }
+
+  final _$counterImoveisDownloadAtom =
+      Atom(name: '_LoginDataStore.counterImoveisDownload');
+
+  @override
+  int get counterImoveisDownload {
+    _$counterImoveisDownloadAtom.reportRead();
+    return super.counterImoveisDownload;
+  }
+
+  @override
+  set counterImoveisDownload(int value) {
+    _$counterImoveisDownloadAtom
+        .reportWrite(value, super.counterImoveisDownload, () {
+      super.counterImoveisDownload = value;
+    });
+  }
+
+  final _$counterImoveisPolygonsAtom =
+      Atom(name: '_LoginDataStore.counterImoveisPolygons');
+
+  @override
+  int get counterImoveisPolygons {
+    _$counterImoveisPolygonsAtom.reportRead();
+    return super.counterImoveisPolygons;
+  }
+
+  @override
+  set counterImoveisPolygons(int value) {
+    _$counterImoveisPolygonsAtom
+        .reportWrite(value, super.counterImoveisPolygons, () {
+      super.counterImoveisPolygons = value;
+    });
+  }
+
+  final _$imoveisListStartPositionAtom =
+      Atom(name: '_LoginDataStore.imoveisListStartPosition');
+
+  @override
+  bool get imoveisListStartPosition {
+    _$imoveisListStartPositionAtom.reportRead();
+    return super.imoveisListStartPosition;
+  }
+
+  @override
+  set imoveisListStartPosition(bool value) {
+    _$imoveisListStartPositionAtom
+        .reportWrite(value, super.imoveisListStartPosition, () {
+      super.imoveisListStartPosition = value;
+    });
+  }
+
   final _$_LoginDataStoreActionController =
       ActionController(name: '_LoginDataStore');
+
+  @override
+  void setAppData(AppData data) {
+    final _$actionInfo = _$_LoginDataStoreActionController.startAction(
+        name: '_LoginDataStore.setAppData');
+    try {
+      return super.setAppData(data);
+    } finally {
+      _$_LoginDataStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void setAppDataCodIbge(String? cod_ibge_m) {
+    final _$actionInfo = _$_LoginDataStoreActionController.startAction(
+        name: '_LoginDataStore.setAppDataCodIbge');
+    try {
+      return super.setAppDataCodIbge(cod_ibge_m);
+    } finally {
+      _$_LoginDataStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void setAppDataPushMessage(String? pushMessage) {
+    final _$actionInfo = _$_LoginDataStoreActionController.startAction(
+        name: '_LoginDataStore.setAppDataPushMessage');
+    try {
+      return super.setAppDataPushMessage(pushMessage);
+    } finally {
+      _$_LoginDataStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void setAppDataPushMessageId(int? idPushMessage) {
+    final _$actionInfo = _$_LoginDataStoreActionController.startAction(
+        name: '_LoginDataStore.setAppDataPushMessageId');
+    try {
+      return super.setAppDataPushMessageId(idPushMessage);
+    } finally {
+      _$_LoginDataStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void setAppDataImoveisLoaded(int? imoveisLoaded) {
+    final _$actionInfo = _$_LoginDataStoreActionController.startAction(
+        name: '_LoginDataStore.setAppDataImoveisLoaded');
+    try {
+      return super.setAppDataImoveisLoaded(imoveisLoaded);
+    } finally {
+      _$_LoginDataStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void setAppDataMunicipiosLoaded(int? municipiosLoaded) {
+    final _$actionInfo = _$_LoginDataStoreActionController.startAction(
+        name: '_LoginDataStore.setAppDataMunicipiosLoaded');
+    try {
+      return super.setAppDataMunicipiosLoaded(municipiosLoaded);
+    } finally {
+      _$_LoginDataStoreActionController.endAction(_$actionInfo);
+    }
+  }
 
   @override
   void setMunicipio(Municipio municipio) {
@@ -1203,6 +1650,72 @@ mixin _$LoginDataStore on _LoginDataStore, Store {
         name: '_LoginDataStore.setMunicipio');
     try {
       return super.setMunicipio(municipio);
+    } finally {
+      _$_LoginDataStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void setEstado(Estado estado) {
+    final _$actionInfo = _$_LoginDataStoreActionController.startAction(
+        name: '_LoginDataStore.setEstado');
+    try {
+      return super.setEstado(estado);
+    } finally {
+      _$_LoginDataStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void setRegAdm(RegiaoAdministrativa ra) {
+    final _$actionInfo = _$_LoginDataStoreActionController.startAction(
+        name: '_LoginDataStore.setRegAdm');
+    try {
+      return super.setRegAdm(ra);
+    } finally {
+      _$_LoginDataStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void setMunicipiosLoading(bool b) {
+    final _$actionInfo = _$_LoginDataStoreActionController.startAction(
+        name: '_LoginDataStore.setMunicipiosLoading');
+    try {
+      return super.setMunicipiosLoading(b);
+    } finally {
+      _$_LoginDataStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void setRegAdmLoading(bool b) {
+    final _$actionInfo = _$_LoginDataStoreActionController.startAction(
+        name: '_LoginDataStore.setRegAdmLoading');
+    try {
+      return super.setRegAdmLoading(b);
+    } finally {
+      _$_LoginDataStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void setMunicipioLocalize(bool b) {
+    final _$actionInfo = _$_LoginDataStoreActionController.startAction(
+        name: '_LoginDataStore.setMunicipioLocalize');
+    try {
+      return super.setMunicipioLocalize(b);
+    } finally {
+      _$_LoginDataStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void setDefaultMunicipio(bool b) {
+    final _$actionInfo = _$_LoginDataStoreActionController.startAction(
+        name: '_LoginDataStore.setDefaultMunicipio');
+    try {
+      return super.setDefaultMunicipio(b);
     } finally {
       _$_LoginDataStoreActionController.endAction(_$actionInfo);
     }
@@ -1473,6 +1986,226 @@ mixin _$LoginDataStore on _LoginDataStore, Store {
   }
 
   @override
+  void addEstadoList(Estado e) {
+    final _$actionInfo = _$_LoginDataStoreActionController.startAction(
+        name: '_LoginDataStore.addEstadoList');
+    try {
+      return super.addEstadoList(e);
+    } finally {
+      _$_LoginDataStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void clearEstadosList() {
+    final _$actionInfo = _$_LoginDataStoreActionController.startAction(
+        name: '_LoginDataStore.clearEstadosList');
+    try {
+      return super.clearEstadosList();
+    } finally {
+      _$_LoginDataStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void addRegAdmList(RegiaoAdministrativa ra) {
+    final _$actionInfo = _$_LoginDataStoreActionController.startAction(
+        name: '_LoginDataStore.addRegAdmList');
+    try {
+      return super.addRegAdmList(ra);
+    } finally {
+      _$_LoginDataStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void clearRegAdmList() {
+    final _$actionInfo = _$_LoginDataStoreActionController.startAction(
+        name: '_LoginDataStore.clearRegAdmList');
+    try {
+      return super.clearRegAdmList();
+    } finally {
+      _$_LoginDataStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void clearRegAdmListAndKeepFirst() {
+    final _$actionInfo = _$_LoginDataStoreActionController.startAction(
+        name: '_LoginDataStore.clearRegAdmListAndKeepFirst');
+    try {
+      return super.clearRegAdmListAndKeepFirst();
+    } finally {
+      _$_LoginDataStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void addImovelDadosAbertos(ImovelDadosAbertos i) {
+    final _$actionInfo = _$_LoginDataStoreActionController.startAction(
+        name: '_LoginDataStore.addImovelDadosAbertos');
+    try {
+      return super.addImovelDadosAbertos(i);
+    } finally {
+      _$_LoginDataStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void clearImovelDadosAbertos() {
+    final _$actionInfo = _$_LoginDataStoreActionController.startAction(
+        name: '_LoginDataStore.clearImovelDadosAbertos');
+    try {
+      return super.clearImovelDadosAbertos();
+    } finally {
+      _$_LoginDataStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void resetSearchValue() {
+    final _$actionInfo = _$_LoginDataStoreActionController.startAction(
+        name: '_LoginDataStore.resetSearchValue');
+    try {
+      return super.resetSearchValue();
+    } finally {
+      _$_LoginDataStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void setSearchValue(String s) {
+    final _$actionInfo = _$_LoginDataStoreActionController.startAction(
+        name: '_LoginDataStore.setSearchValue');
+    try {
+      return super.setSearchValue(s);
+    } finally {
+      _$_LoginDataStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void startSearching() {
+    final _$actionInfo = _$_LoginDataStoreActionController.startAction(
+        name: '_LoginDataStore.startSearching');
+    try {
+      return super.startSearching();
+    } finally {
+      _$_LoginDataStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void stopSearching() {
+    final _$actionInfo = _$_LoginDataStoreActionController.startAction(
+        name: '_LoginDataStore.stopSearching');
+    try {
+      return super.stopSearching();
+    } finally {
+      _$_LoginDataStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void setMunicipioJSFileLoaded(bool b) {
+    final _$actionInfo = _$_LoginDataStoreActionController.startAction(
+        name: '_LoginDataStore.setMunicipioJSFileLoaded');
+    try {
+      return super.setMunicipioJSFileLoaded(b);
+    } finally {
+      _$_LoginDataStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void setImovelCounter(int i) {
+    final _$actionInfo = _$_LoginDataStoreActionController.startAction(
+        name: '_LoginDataStore.setImovelCounter');
+    try {
+      return super.setImovelCounter(i);
+    } finally {
+      _$_LoginDataStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void imovelCounterAdd() {
+    final _$actionInfo = _$_LoginDataStoreActionController.startAction(
+        name: '_LoginDataStore.imovelCounterAdd');
+    try {
+      return super.imovelCounterAdd();
+    } finally {
+      _$_LoginDataStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void setImovelPolygonCounter(int i) {
+    final _$actionInfo = _$_LoginDataStoreActionController.startAction(
+        name: '_LoginDataStore.setImovelPolygonCounter');
+    try {
+      return super.setImovelPolygonCounter(i);
+    } finally {
+      _$_LoginDataStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void imovelPolygonCounterAdd() {
+    final _$actionInfo = _$_LoginDataStoreActionController.startAction(
+        name: '_LoginDataStore.imovelPolygonCounterAdd');
+    try {
+      return super.imovelPolygonCounterAdd();
+    } finally {
+      _$_LoginDataStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void setTotalImoveisCounter(int i) {
+    final _$actionInfo = _$_LoginDataStoreActionController.startAction(
+        name: '_LoginDataStore.setTotalImoveisCounter');
+    try {
+      return super.setTotalImoveisCounter(i);
+    } finally {
+      _$_LoginDataStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void setStartImoveisDownload(bool b) {
+    final _$actionInfo = _$_LoginDataStoreActionController.startAction(
+        name: '_LoginDataStore.setStartImoveisDownload');
+    try {
+      return super.setStartImoveisDownload(b);
+    } finally {
+      _$_LoginDataStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void setImoveisListStartPosition(bool b) {
+    final _$actionInfo = _$_LoginDataStoreActionController.startAction(
+        name: '_LoginDataStore.setImoveisListStartPosition');
+    try {
+      return super.setImoveisListStartPosition(b);
+    } finally {
+      _$_LoginDataStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void setOfflineMessage(bool b) {
+    final _$actionInfo = _$_LoginDataStoreActionController.startAction(
+        name: '_LoginDataStore.setOfflineMessage');
+    try {
+      return super.setOfflineMessage(b);
+    } finally {
+      _$_LoginDataStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   void setRoutPath(LatLng2.Path<LatLng2.LatLng> p) {
     final _$actionInfo = _$_LoginDataStoreActionController.startAction(
         name: '_LoginDataStore.setRoutPath');
@@ -1533,6 +2266,17 @@ mixin _$LoginDataStore on _LoginDataStore, Store {
         name: '_LoginDataStore.setSelectedImovelRoute');
     try {
       return super.setSelectedImovelRoute(i);
+    } finally {
+      _$_LoginDataStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void setSelectedImovelDadosAbertos(ImovelDadosAbertos i) {
+    final _$actionInfo = _$_LoginDataStoreActionController.startAction(
+        name: '_LoginDataStore.setSelectedImovelDadosAbertos');
+    try {
+      return super.setSelectedImovelDadosAbertos(i);
     } finally {
       _$_LoginDataStoreActionController.endAction(_$actionInfo);
     }
@@ -2100,6 +2844,17 @@ mixin _$LoginDataStore on _LoginDataStore, Store {
   }
 
   @override
+  void setPonteJurisdicao(String s) {
+    final _$actionInfo = _$_LoginDataStoreActionController.startAction(
+        name: '_LoginDataStore.setPonteJurisdicao');
+    try {
+      return super.setPonteJurisdicao(s);
+    } finally {
+      _$_LoginDataStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   void setPonteMaterial(String s) {
     final _$actionInfo = _$_LoginDataStoreActionController.startAction(
         name: '_LoginDataStore.setPonteMaterial');
@@ -2267,7 +3022,15 @@ mixin _$LoginDataStore on _LoginDataStore, Store {
   @override
   String toString() {
     return '''
+appData: ${appData},
 m: ${m},
+e: ${e},
+regAdm: ${regAdm},
+municipiosLoading: ${municipiosLoading},
+regAdmLoading: ${regAdmLoading},
+municipioLocalize: ${municipioLocalize},
+defaultMunicipio: ${defaultMunicipio},
+offlineMessage: ${offlineMessage},
 u: ${u},
 loggedIn: ${loggedIn},
 municipioSelectorEnabled: ${municipioSelectorEnabled},
@@ -2292,6 +3055,7 @@ buttonIniciarNavegacaoText: ${buttonIniciarNavegacaoText},
 navigationHeading: ${navigationHeading},
 routePath: ${routePath},
 selectedImovelRoute: ${selectedImovelRoute},
+selectedImovelDadosAbertos: ${selectedImovelDadosAbertos},
 selectedLevantamento: ${selectedLevantamento},
 routeDone: ${routeDone},
 levantamentoDescricao: ${levantamentoDescricao},
@@ -2321,6 +3085,7 @@ imovelGeoPointStart: ${imovelGeoPointStart},
 buttonIniciarCapturaImovelText: ${buttonIniciarCapturaImovelText},
 ponteDescricao: ${ponteDescricao},
 ponteEstadoConservacao: ${ponteEstadoConservacao},
+ponteJurisdicao: ${ponteJurisdicao},
 ponteMaterial: ${ponteMaterial},
 ponteExtensaoAproximada: ${ponteExtensaoAproximada},
 ponteRioRiacho: ${ponteRioRiacho},
@@ -2328,8 +3093,21 @@ ponteStart: ${ponteStart},
 buttonIniciarCapturaPonteText: ${buttonIniciarCapturaPonteText},
 selectedPontePoint: ${selectedPontePoint},
 selectedPonteImage: ${selectedPonteImage},
+searchImovelValue: ${searchImovelValue},
+searchStarted: ${searchStarted},
+municipioJSFilesLoaded: ${municipioJSFilesLoaded},
+startImoveisDownload: ${startImoveisDownload},
+totalImoveisDownload: ${totalImoveisDownload},
+counterImoveisDownload: ${counterImoveisDownload},
+counterImoveisPolygons: ${counterImoveisPolygons},
+imoveisListStartPosition: ${imoveisListStartPosition},
 isColected: ${isColected},
 isCidadeValid: ${isCidadeValid},
+isMunicipioLoading: ${isMunicipioLoading},
+isRegAdmLoading: ${isRegAdmLoading},
+isMunicipioLocalizedChanged: ${isMunicipioLocalizedChanged},
+isDefaultMunicipio: ${isDefaultMunicipio},
+isImoveisListToStart: ${isImoveisListToStart},
 tipoSelected: ${tipoSelected},
 isIdentValid: ${isIdentValid},
 isColorFinished: ${isColorFinished},
@@ -2343,6 +3121,7 @@ isButtonIniciarNavegacaoVisible: ${isButtonIniciarNavegacaoVisible},
 isNavigationStarted: ${isNavigationStarted},
 isNavigationStartedWithoutCompass: ${isNavigationStartedWithoutCompass},
 hasSelectedRoute: ${hasSelectedRoute},
+hasSelectedImovelDadosAbertos: ${hasSelectedImovelDadosAbertos},
 isRouteDone: ${isRouteDone},
 isLevantamentoFormValid: ${isLevantamentoFormValid},
 isLevantamentoSincronizado: ${isLevantamentoSincronizado},
@@ -2357,7 +3136,14 @@ isImovelStarted: ${isImovelStarted},
 isImovelCaptureStarted: ${isImovelCaptureStarted},
 isPonteFormValid: ${isPonteFormValid},
 isPonteStarted: ${isPonteStarted},
-isPonteCaptureStarted: ${isPonteCaptureStarted}
+isPonteCaptureStarted: ${isPonteCaptureStarted},
+isImovelSearching: ${isImovelSearching},
+isMunicipioJSFileLoaded: ${isMunicipioJSFileLoaded},
+isImovelCounterFinished: ${isImovelCounterFinished},
+isImovelPolygonsCounterFinished: ${isImovelPolygonsCounterFinished},
+isImovelDataLoaded: ${isImovelDataLoaded},
+isImoveisDownloadStarted: ${isImoveisDownloadStarted},
+showOfflineMessage: ${showOfflineMessage}
     ''';
   }
 }

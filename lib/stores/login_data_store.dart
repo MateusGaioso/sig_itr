@@ -1,14 +1,18 @@
 import 'dart:async';
 
 import 'package:app_itr/etc/DBColumnNames.dart';
+import 'package:app_itr/helpers/classes/AppData.dart';
+import 'package:app_itr/helpers/classes/Estado.dart';
 import 'package:app_itr/helpers/classes/EstradaPoint.dart';
+import 'package:app_itr/helpers/classes/ImovelDadosAbertos.dart';
 import 'package:app_itr/helpers/classes/ImovelGeoPoint.dart';
 import 'package:app_itr/helpers/classes/ImovelRoute.dart';
 import 'package:app_itr/helpers/classes/Levantamento.dart';
 import 'package:app_itr/helpers/classes/PontePoint.dart';
+import 'package:app_itr/helpers/classes/RegiaoAdministrativa.dart';
 import 'package:app_itr/helpers/classes/RotaEscolarPoint.dart';
 import 'package:app_itr/helpers/classes/imovel.dart';
-import 'package:app_itr/helpers/classes/municipio.dart';
+import 'package:app_itr/helpers/classes/Municipio.dart';
 import 'package:app_itr/helpers/classes/user.dart';
 import 'package:app_itr/helpers/db.dart';
 import 'package:flutter/material.dart';
@@ -33,9 +37,32 @@ abstract class _LoginDataStore with Store {
 
   }
 
+  @observable
+  AppData appData = AppData();
 
   @observable
   Municipio m = Municipio();
+
+  @observable
+  Estado e = Estado();
+
+  @observable
+  RegiaoAdministrativa regAdm = RegiaoAdministrativa();
+
+  @observable
+  bool municipiosLoading = false;
+
+  @observable
+  bool regAdmLoading = false;
+
+  @observable
+  bool municipioLocalize = false;
+
+  @observable
+  bool defaultMunicipio  = false;
+
+  @observable
+  bool offlineMessage  = false;
 
   @observable
   User u = User();
@@ -106,6 +133,8 @@ abstract class _LoginDataStore with Store {
   ObservableList<ImovelRoute> imovelRouteList = ObservableList<ImovelRoute>();
   ObservableList<LatLng2.LatLng> routeLatLngList = ObservableList<LatLng2.LatLng>();
   ObservableList<Municipio> municipiosList = ObservableList<Municipio>();
+  ObservableList<Estado> estadosList = ObservableList<Estado>();
+  ObservableList<RegiaoAdministrativa> regiaoAdministrativaList = ObservableList<RegiaoAdministrativa>();
   ObservableList<Levantamento> levantamentosList = ObservableList<Levantamento>();
   ObservableList<Levantamento> levantamentosListAsync = ObservableList<Levantamento>();
   ObservableList<EstradaPoint> estradaPointList = ObservableList<EstradaPoint>();
@@ -117,12 +146,16 @@ abstract class _LoginDataStore with Store {
   ObservableList<PontePoint> ponteList = ObservableList<PontePoint>();
   ObservableList<PontePoint> ponteListAsync = ObservableList<PontePoint>();
   ObservableList<Object> ponteImages = ObservableList<Object>();
+  ObservableList<ImovelDadosAbertos> imovelDadosAbertosList = ObservableList<ImovelDadosAbertos>();
 
   @observable
   LatLng2.Path routePath = LatLng2.Path();
 
   @observable
   ImovelRoute selectedImovelRoute = ImovelRoute();
+
+  @observable
+  ImovelDadosAbertos selectedImovelDadosAbertos = ImovelDadosAbertos();
 
   @observable
   Levantamento selectedLevantamento = Levantamento();
@@ -223,6 +256,9 @@ abstract class _LoginDataStore with Store {
   String ponteEstadoConservacao = "";
 
   @observable
+  String ponteJurisdicao = "";
+
+  @observable
   String ponteMaterial = "";
 
   @observable
@@ -243,11 +279,97 @@ abstract class _LoginDataStore with Store {
   @observable
   PonteImage? selectedPonteImage;
 
+  //OBSERVABLE IMOVEIS DADOS ABERTOS
+
+  @observable
+  String searchImovelValue = "";
+
+  @observable
+  bool searchStarted = false;
+
+  @observable
+  bool municipioJSFilesLoaded = false;
+
+  @observable
+  bool startImoveisDownload = false;
+
+  @observable
+  int totalImoveisDownload  = 0;
+
+  @observable
+  int counterImoveisDownload  = 0;
+
+  @observable
+  int counterImoveisPolygons  = 0;
+
+  @observable
+  bool imoveisListStartPosition  = false;
+
   /// ACTIONS
+
+  @action
+  void setAppData(AppData data) {
+    appData = data;
+  }
+
+  @action
+  void setAppDataCodIbge(String? cod_ibge_m){
+    appData.cod_ibge_m = cod_ibge_m;
+  }
+
+  @action
+  void setAppDataPushMessage(String? pushMessage){
+    appData.pushMessage = pushMessage;
+  }
+
+  @action
+  void setAppDataPushMessageId(int? idPushMessage){
+    appData.idPushMessage = idPushMessage;
+  }
+
+  @action
+  void setAppDataImoveisLoaded(int? imoveisLoaded){
+    appData.isImoveisListByUFLoaded = imoveisLoaded;
+  }
+
+  @action
+  void setAppDataMunicipiosLoaded(int? municipiosLoaded){
+    appData.isMunicipiosListByUFLoaded = municipiosLoaded;
+  }
 
   @action
   void setMunicipio(Municipio municipio) {
     m = municipio;
+  }
+
+  @action
+  void setEstado(Estado estado) {
+    e = estado;
+  }
+
+  @action
+  void setRegAdm(RegiaoAdministrativa ra) {
+    regAdm = ra;
+  }
+
+  @action
+  void setMunicipiosLoading(bool b) {
+    municipiosLoading = b;
+  }
+
+  @action
+  void setRegAdmLoading(bool b) {
+    regAdmLoading = b;
+  }
+
+  @action
+  void setMunicipioLocalize(bool b) {
+    municipioLocalize = b;
+  }
+
+  @action
+  void setDefaultMunicipio(bool b) {
+    defaultMunicipio = b;
   }
 
   @action
@@ -363,7 +485,6 @@ abstract class _LoginDataStore with Store {
     navigationHeading = d;
   }
 
-
   @action
   void addMunicipioList(Municipio m){
     municipiosList.add(m);
@@ -372,6 +493,109 @@ abstract class _LoginDataStore with Store {
   @action
   void clearMunicipioList(){
     municipiosList.clear();
+  }
+
+  @action
+  void addEstadoList(Estado e){
+    estadosList.add(e);
+  }
+
+  @action
+  void clearEstadosList(){
+    estadosList.clear();
+  }
+
+  @action
+  void addRegAdmList(RegiaoAdministrativa ra){
+    regiaoAdministrativaList.add(ra);
+  }
+
+  @action
+  void clearRegAdmList(){
+    regiaoAdministrativaList.clear();
+  }
+
+  @action
+  void clearRegAdmListAndKeepFirst(){
+    regiaoAdministrativaList.removeRange(1, regiaoAdministrativaList.length);
+
+  }
+
+  ///ACTIONS IMOVEL DADOS ABERTOS
+
+  @action
+  void addImovelDadosAbertos(ImovelDadosAbertos i){
+    imovelDadosAbertosList.add(i);
+  }
+
+  @action
+  void clearImovelDadosAbertos(){
+    imovelDadosAbertosList.clear();
+  }
+
+  @action
+  void resetSearchValue(){
+    searchImovelValue = "";
+  }
+
+  @action
+  void setSearchValue(String s){
+    searchImovelValue = s;
+  }
+
+  @action
+  void startSearching(){
+    searchStarted = true;
+  }
+
+  @action
+  void stopSearching(){
+    searchStarted = false;
+  }
+
+  @action
+  void setMunicipioJSFileLoaded(bool b){
+    municipioJSFilesLoaded = b;
+  }
+
+  @action
+  void setImovelCounter(int i){
+    counterImoveisDownload = i;
+  }
+
+  @action
+  void imovelCounterAdd(){
+    counterImoveisDownload++;
+  }
+
+  @action
+  void setImovelPolygonCounter(int i){
+    counterImoveisPolygons = i;
+  }
+
+  @action
+  void imovelPolygonCounterAdd(){
+    counterImoveisPolygons++;
+  }
+
+  @action
+  void setTotalImoveisCounter(int i){
+    totalImoveisDownload = i;
+  }
+
+  @action
+  void setStartImoveisDownload(bool b){
+    startImoveisDownload = b;
+  }
+
+  @action
+  void setImoveisListStartPosition(bool b){
+    imoveisListStartPosition = b;
+  }
+
+  @action
+  void setOfflineMessage(bool b){
+    offlineMessage = b;
   }
 
 
@@ -407,6 +631,11 @@ abstract class _LoginDataStore with Store {
   @action
   void setSelectedImovelRoute(ImovelRoute i){
     selectedImovelRoute = i;
+  }
+
+  @action
+  void setSelectedImovelDadosAbertos(ImovelDadosAbertos i){
+    selectedImovelDadosAbertos = i;
   }
 
   @action
@@ -700,6 +929,11 @@ abstract class _LoginDataStore with Store {
   }
 
   @action
+  void setPonteJurisdicao(String s){
+    ponteJurisdicao = s;
+  }
+
+  @action
   void setPonteMaterial(String s){
     ponteMaterial = s;
   }
@@ -723,7 +957,6 @@ abstract class _LoginDataStore with Store {
   void clearPonteList(){
     ponteList.clear();
   }
-
 
   @action
   void addPonteAsyncList(PontePoint p){
@@ -768,6 +1001,7 @@ abstract class _LoginDataStore with Store {
   @action
   void clearPonteData(){
     ponteDescricao = "";
+    ponteJurisdicao = "estadual";
     ponteEstadoConservacao = "otimo";
     ponteExtensaoAproximada = "";
     ponteRioRiacho = "";
@@ -791,6 +1025,7 @@ abstract class _LoginDataStore with Store {
     selectedPonteImage = null;
     selectedLevantamento = Levantamento();
     selectedImovelRoute = ImovelRoute();
+    selectedImovelDadosAbertos = ImovelDadosAbertos();
     clearButtons();
     clearPonteData();
     clearEstradaData();
@@ -813,16 +1048,28 @@ abstract class _LoginDataStore with Store {
   }
 
   @computed
-  int get tipoSelected => tipo_ponto;
+  bool get isMunicipioLoading => municipiosLoading;
 
+  @computed
+  bool get isRegAdmLoading => regAdmLoading;
+
+  @computed
+  bool get isMunicipioLocalizedChanged => municipioLocalize;
+
+  @computed
+  bool get isDefaultMunicipio => defaultMunicipio;
+
+  @computed
+  bool get isImoveisListToStart => imoveisListStartPosition;
+
+  @computed
+  int get tipoSelected => tipo_ponto;
 
   @computed
   bool get isIdentValid => identificacao.length >=  2 && identificacao.length <= 30;
 
-
   @computed
   bool get isColorFinished => colorStateValue == 2;
-
 
 
   @computed
@@ -861,6 +1108,9 @@ abstract class _LoginDataStore with Store {
 
   @computed
   bool get hasSelectedRoute => selectedImovelRoute.id != null;
+
+  @computed
+  bool get hasSelectedImovelDadosAbertos => selectedImovelDadosAbertos.idSistema != null;
 
   @computed
   bool get isRouteDone => routeDone;
@@ -907,5 +1157,25 @@ abstract class _LoginDataStore with Store {
   @computed
   bool get isPonteCaptureStarted => buttonIniciarCapturaPonteText == "PAUSAR CAPTURA DA PONTE";
 
+  @computed
+  bool get isImovelSearching => searchStarted;
+
+  @computed
+  bool get isMunicipioJSFileLoaded => municipioJSFilesLoaded;
+
+  @computed
+  bool get isImovelCounterFinished => counterImoveisDownload == totalImoveisDownload && startImoveisDownload;
+
+  @computed
+  bool get isImovelPolygonsCounterFinished => counterImoveisPolygons == totalImoveisDownload && startImoveisDownload && isImovelCounterFinished;
+
+  @computed
+  bool get isImovelDataLoaded => appData.isImoveisListByUFLoaded == 1;
+
+  @computed
+  bool get isImoveisDownloadStarted => startImoveisDownload;
+
+  @computed
+  bool get showOfflineMessage => offlineMessage;
 
 }

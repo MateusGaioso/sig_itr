@@ -1,12 +1,14 @@
 import 'dart:io';
 
+import 'package:app_itr/etc/CustomBorder.dart';
 import 'package:app_itr/etc/JavaScriptGenerator.dart';
 import 'package:app_itr/etc/JsonGenerator.dart';
 import 'package:app_itr/etc/ThemeCTRM.dart';
-import 'package:app_itr/helpers/classes/municipio.dart';
+import 'package:app_itr/helpers/classes/Municipio.dart';
 import 'package:app_itr/helpers/db.dart';
 import 'package:app_itr/stores/login_data_store.dart';
 import 'package:app_itr/ui/MainPage.dart';
+import 'package:app_itr/ui/SelectSystemPage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -85,7 +87,7 @@ class _SelectCityPageState extends State<SelectCityPage> {
                       Center(
                         child: Text(
                           "Deseja sair do CTRM?",
-                          style: FontsStyleCTRM.primaryFont25SuperDark,
+                          style: TextStyle(fontSize: 20.0, color: Color(0xFF12a19a)),
                         ),
                       ),
                       SizedBox(height: 20),
@@ -100,7 +102,7 @@ class _SelectCityPageState extends State<SelectCityPage> {
                               child: RaisedButton(
                                 child: Text(
                                   "SIM",
-                                  style: FontsStyleCTRM.primaryFontWhite,
+                                  style: TextStyle(color: Colors.white),
                                 ),
                                 color: ColorsCTRM.primaryColorDark,
                                 onPressed: () {
@@ -114,7 +116,7 @@ class _SelectCityPageState extends State<SelectCityPage> {
                                 color: ColorsCTRM.primaryColorTetraticRed,
                                 child: Text(
                                   "NÃO",
-                                  style:  FontsStyleCTRM.primaryFontWhite,
+                                  style: TextStyle(color: Colors.white),
                                 ),
                                 onPressed: () {
                                   Navigator.pop(dialogContext);
@@ -139,7 +141,7 @@ class _SelectCityPageState extends State<SelectCityPage> {
   void _logout() {
     helper.deleteLoggedUser();
     _loginDataStore.logout();
-    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LoginPage()));
+    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => SelectSystemPage()));
   }
 
   void logout() {
@@ -162,7 +164,7 @@ class _SelectCityPageState extends State<SelectCityPage> {
                       Center(
                         child: Text(
                           "Deseja fazer o logout?",
-                          style: FontsStyleCTRM.primaryFont20Dark
+                          style: FontsStyleCTRM.primaryFont20Dark,
                         ),
                       ),
                       SizedBox(height: 20),
@@ -176,8 +178,8 @@ class _SelectCityPageState extends State<SelectCityPage> {
                               padding: EdgeInsets.symmetric(horizontal: 10.0),
                               child: RaisedButton(
                                 child: Text(
-                                  "SIM",
-                                  style: FontsStyleCTRM.primaryFontWhite
+                                    "SIM",
+                                    style: FontsStyleCTRM.primaryFontWhite
                                 ),
                                 color: ColorsCTRM.primaryColorDark,
                                 onPressed: _logout,
@@ -188,8 +190,8 @@ class _SelectCityPageState extends State<SelectCityPage> {
                               child: RaisedButton(
                                 color: ColorsCTRM.primaryColorTetraticRed,
                                 child: Text(
-                                  "NÃO",
-                                  style:  FontsStyleCTRM.primaryFontWhite
+                                    "NÃO",
+                                    style: FontsStyleCTRM.primaryFontWhite
                                 ),
                                 onPressed: () {
                                   Navigator.pop(dialogContext);
@@ -216,7 +218,7 @@ class _SelectCityPageState extends State<SelectCityPage> {
         child: Stack(
           children: [
             Scaffold(
-                backgroundColor: Colors.white,
+                backgroundColor: ColorsCTRM.primaryColor,
                 body: SingleChildScrollView(
                   child: Column(mainAxisAlignment: MainAxisAlignment.center, crossAxisAlignment: CrossAxisAlignment.stretch, children: <Widget>[
                     Padding(padding: EdgeInsets.only(left: 20.0, right: 20.0), child: Image(image: AssetImage('assets/images/logo_verde.png'))),
@@ -224,23 +226,24 @@ class _SelectCityPageState extends State<SelectCityPage> {
                         padding: EdgeInsets.only(left: 40.0, right: 40.0),
                         child: Observer(
                           builder: (_) {
-                            return DropdownButton<Municipio>(
+                            return _loginDataStore.isMunicipioLoading ? Container() :
+                            DropdownButton<Municipio>(
                               value: _loginDataStore.m,
                               selectedItemBuilder: (_) {
                                 return _loginDataStore.municipiosList
                                     .map((e) => Container(
-                                          alignment: Alignment.center,
-                                          child: Text(
-                                            e.municipio_plus_uf(),
-                                            style: FontsStyleCTRM.primaryFont
-                                          ),
-                                        ))
+                                  alignment: Alignment.center,
+                                  child: Text(
+                                      e.municipio_plus_uf(),
+                                      style: FontsStyleCTRM.primaryFontWhite
+                                  ),
+                                ))
                                     .toList();
                               },
                               icon: Icon(Icons.arrow_drop_down),
                               iconSize: 24,
                               elevation: 16,
-                              style: FontsStyleCTRM.primaryFont,
+                              style: FontsStyleCTRM.primaryFontWhite,
                               isExpanded: true,
                               underline: Container(
                                 height: 2,
@@ -249,7 +252,7 @@ class _SelectCityPageState extends State<SelectCityPage> {
                               onChanged: (Municipio? newValue) {
                                 if(newValue!.idSistema != 0){
 
-                                  _loginDataStore.setMunicipio(newValue!);
+                                  _loginDataStore.setMunicipio(newValue);
 
                                   try{
                                     String nomeFile = "${newValue.municipio_plus_uf()}";
@@ -268,8 +271,8 @@ class _SelectCityPageState extends State<SelectCityPage> {
                                 return DropdownMenuItem<Municipio>(
                                   value: item,
                                   child: new Text(
-                                    item.municipio_plus_uf(),
-                                    style: FontsStyleCTRM.primaryFont18Dark
+                                      item.municipio_plus_uf(),
+                                      style: FontsStyleCTRM.primaryFont18Dark
                                   ),
                                 );
                               }).toList(),
@@ -298,7 +301,7 @@ class _SelectCityPageState extends State<SelectCityPage> {
               right: 20,
               bottom: 40,
               child: FloatingActionButton.extended(
-                shape: _CustomBorder(),
+                shape: CustomBorder(),
                 label: Row(
                   children: [Text('LOGOUT')],
                 ),
@@ -313,37 +316,4 @@ class _SelectCityPageState extends State<SelectCityPage> {
   }
 }
 
-class _CustomBorder extends ShapeBorder {
-  const _CustomBorder();
 
-  @override
-  EdgeInsetsGeometry get dimensions {
-    return const EdgeInsets.only();
-  }
-
-  @override
-  Path getInnerPath(Rect rect, {TextDirection? textDirection}) {
-    return getOuterPath(rect, textDirection: textDirection);
-  }
-
-  @override
-  Path getOuterPath(Rect rect, {TextDirection? textDirection}) {
-    return Path()
-      ..moveTo(rect.left, rect.top)
-      ..lineTo(rect.right - rect.width / 2, rect.top)
-      ..lineTo(rect.right, rect.top)
-      ..lineTo(rect.right, rect.bottom)
-      ..lineTo(rect.left, rect.bottom)
-      ..lineTo(rect.left, rect.top)
-      ..close();
-  }
-
-  @override
-  void paint(Canvas canvas, Rect rect, {TextDirection? textDirection}) {}
-
-  @override
-  ShapeBorder scale(double t) {
-    // TODO: implement scale
-    throw UnimplementedError();
-  }
-}

@@ -1,4 +1,4 @@
-import 'package:app_itr/helpers/classes/municipio.dart';
+import 'package:app_itr/helpers/classes/Municipio.dart';
 import 'package:app_itr/helpers/classes/user.dart';
 import 'dart:convert';
 import 'package:app_itr/helpers/db.dart';
@@ -28,7 +28,7 @@ Future<String> returnToken(String user, String pass) async {
       }),
       encoding: utf8);
 
-    print("NEW RESPONSE IS: $response");
+  print("NEW RESPONSE IS: $response");
 
 
   if (response.statusCode == 201 || response.statusCode == 200) {
@@ -56,7 +56,7 @@ Future<User> returnUserData(String token, String user, String pass) async {
     'Authorization': 'Token $token',
   });
 
-  
+
 
   if (response.statusCode == 201 || response.statusCode == 200) {
     // If the server did return a 201 CREATED response,
@@ -66,10 +66,10 @@ Future<User> returnUserData(String token, String user, String pass) async {
 
     print("DATA RECEIVED");
     String _data = '';
-    
+
     var body = response.body.toString();
     var decoded= utf8.decode(body.runes.toList());
-    
+
     print(decoded);
 
     User u = User();
@@ -88,7 +88,7 @@ Future<User> returnUserData(String token, String user, String pass) async {
 
     final List t = json.decode(response.body)["municipios"];
     final List<Municipio> mList =
-        t.map((item) => Municipio.fromJson(item)).toList();
+    t.map((item) => Municipio.fromJson(item)).toList();
 
     for (int i = 0; i < mList.length; i++) {
 
@@ -113,7 +113,7 @@ Future<User> returnUserData(String token, String user, String pass) async {
 }
 
 Future<void> returnGeo() async {
-print("here is");
+  print("here is");
 
   Client c = Client();
   Response response = await c.get(geo_uri,  headers: <String, String>{

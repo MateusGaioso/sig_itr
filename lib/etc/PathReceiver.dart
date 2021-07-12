@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:app_itr/helpers/classes/municipio.dart';
+import 'package:app_itr/helpers/classes/Municipio.dart';
 import 'package:app_itr/stores/login_data_store.dart';
 import 'package:http/http.dart';
 import 'package:path_provider/path_provider.dart';

@@ -1,5 +1,5 @@
 import 'package:app_itr/helpers/classes/ImovelGeoPoint.dart';
-import 'package:app_itr/helpers/classes/municipio.dart';
+import 'package:app_itr/helpers/classes/Municipio.dart';
 import 'package:app_itr/helpers/classes/user.dart';
 import 'dart:convert';
 import 'package:app_itr/helpers/db.dart';
