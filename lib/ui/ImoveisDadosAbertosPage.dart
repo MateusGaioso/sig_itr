@@ -20,7 +20,7 @@ import 'package:http/http.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-const _url = 'https://wa.me/message/VWIDNXGPX6CZN1';
+const _url = 'https://wa.me/message/G6GKTCI5H5UFB1';
 
 class ImoveisDadosAbertosPage extends StatefulWidget {
   ImoveisDadosAbertosPage({Key? key}) : super(key: key);
