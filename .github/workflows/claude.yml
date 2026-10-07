@@ -28,6 +28,40 @@ jobs:
       actions: read
     env:
       CLAUDE_CODE_DISABLE_BACKGROUND_TASKS: "1"
+      REVIEW_TOOLS: >-
+        mcp__github_inline_comment__create_inline_comment,Bash(gh pr comment:*),Bash(gh pr diff:*),Bash(gh pr view:*),Bash(gh api:*),Bash(git log:*),Bash(git diff:*),Bash(git show:*),Read,Grep,Glob
+      # Own review prompt (2026-10-07): the official code-review plugin only looks at the
+      # diff, drops anything input-dependent and skips PRs Claude already commented on,
+      # so it answered "No issues found" to almost every PR.
+      REVIEW_PROMPT: |
+        REPO: ${{ github.repository }}
+        PR: ${{ github.event.pull_request.number }}
+
+        Você é o revisor de código deste PR. Escreva tudo em português do Brasil.
+
+        1. Leia o PR com `gh pr view` e o diff com `gh pr diff`. Se você (claude) já publicou
+           um resumo de review neste PR, revise SÓ o que mudou desde ele (commits novos) e diga
+           quais achados anteriores foram resolvidos.
+        2. Vá além do diff: abra com Read/Grep/Glob os arquivos tocados inteiros, quem chama o
+           código alterado, models/migrations/serializers envolvidos, os testes existentes e as
+           regras do projeto que se aplicam (CLAUDE.md, .claude/CLAUDE.md, .claude/rules/*.md com
+           paths que casam com os arquivos do diff).
+        3. Procure DEFEITOS REAIS, nesta ordem: bug/resultado errado (inclusive em casos de borda
+           e estado), segurança (OWASP, autorização/IDOR, CSRF, segredos, LGPD/dados pessoais),
+           dados e migrations (perda, não reversível, default errado), concorrência e efeitos
+           colaterais, desempenho (N+1, consulta em loop), teste faltando ou falso-verde para o
+           comportamento novo, violação de regra explícita do projeto (cite a regra).
+           Não aponte estilo, gosto pessoal, nem o que o linter já pega.
+        4. Para CADA achado, publique um comentário na linha exata com
+           mcp__github_inline_comment__create_inline_comment (confirmed: true), começando por
+           `[BLOCKER]`, `[MAJOR]` ou `[MINOR]`, dizendo o problema, por que acontece (com o
+           caminho do dado ou da chamada) e a correção concreta. Todo achado acionável PRECISA ser
+           comentário na linha — é isso que o agente de correção lê. Só aponte o que você
+           consegue defender lendo o código; se for hipótese, diga o que verificar.
+        5. Termine com UM comentário geral via `gh pr comment` no formato:
+           `## Review do Claude` · veredito (**Aprovado** / **Mudanças necessárias** se houver
+           BLOCKER ou MAJOR) · tabela `Gravidade | Arquivo:linha | Achado` · uma linha "O que
+           foi verificado" (arquivos e regras lidos). Sem achados, diga isso e o que verificou.
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -107,10 +141,8 @@ jobs:
         with:
           claude_code_oauth_token: ${{ steps.pick.outputs.a1 == 'CONTA1' && secrets.CLAUDE_OAUTH_CONTA1 || steps.pick.outputs.a1 == 'CONTA2' && secrets.CLAUDE_OAUTH_CONTA2 || steps.pick.outputs.a1 == 'CONTA3' && secrets.CLAUDE_OAUTH_CONTA3 || secrets.CLAUDE_CODE_OAUTH_TOKEN }}
           settings: '{"env": {"CLAUDE_CODE_DISABLE_BACKGROUND_TASKS": "1"}}'
-          plugin_marketplaces: ${{ 'mention' == 'review' && 'https://github.com/anthropics/claude-code.git' || '' }}
-          plugins: ${{ 'mention' == 'review' && 'code-review@claude-code-plugins' || '' }}
-          prompt: ${{ 'mention' == 'review' && format('/code-review:code-review --comment {0}/pull/{1}', github.repository, github.event.pull_request.number) || '' }}
-          claude_args: ${{ format('{0} {1}', 'mention' == 'review' && '--allowedTools "mcp__github_inline_comment__create_inline_comment"' || '', 'mention'l != '' && format('--model {0}', 'mention'l) || '') }}
+          prompt: ${{ 'mention' == 'review' && env.REVIEW_PROMPT || '' }}
+          claude_args: ${{ format('{0} {1}', 'mention' == 'review' && format('--max-turns 80 --allowedTools "{0}"', env.REVIEW_TOOLS) || '', 'mention'l != '' && format('--model {0}', 'mention'l) || '') }}
           additional_permissions: |
             actions: read
 
@@ -122,10 +154,8 @@ jobs:
         with:
           claude_code_oauth_token: ${{ steps.pick.outputs.a2 == 'CONTA1' && secrets.CLAUDE_OAUTH_CONTA1 || steps.pick.outputs.a2 == 'CONTA2' && secrets.CLAUDE_OAUTH_CONTA2 || steps.pick.outputs.a2 == 'CONTA3' && secrets.CLAUDE_OAUTH_CONTA3 || secrets.CLAUDE_CODE_OAUTH_TOKEN }}
           settings: '{"env": {"CLAUDE_CODE_DISABLE_BACKGROUND_TASKS": "1"}}'
-          plugin_marketplaces: ${{ 'mention' == 'review' && 'https://github.com/anthropics/claude-code.git' || '' }}
-          plugins: ${{ 'mention' == 'review' && 'code-review@claude-code-plugins' || '' }}
-          prompt: ${{ 'mention' == 'review' && format('/code-review:code-review --comment {0}/pull/{1}', github.repository, github.event.pull_request.number) || '' }}
-          claude_args: ${{ format('{0} {1}', 'mention' == 'review' && '--allowedTools "mcp__github_inline_comment__create_inline_comment"' || '', 'mention'l != '' && format('--model {0}', 'mention'l) || '') }}
+          prompt: ${{ 'mention' == 'review' && env.REVIEW_PROMPT || '' }}
+          claude_args: ${{ format('{0} {1}', 'mention' == 'review' && format('--max-turns 80 --allowedTools "{0}"', env.REVIEW_TOOLS) || '', 'mention'l != '' && format('--model {0}', 'mention'l) || '') }}
           additional_permissions: |
             actions: read
 
@@ -136,10 +166,8 @@ jobs:
         with:
           claude_code_oauth_token: ${{ steps.pick.outputs.a3 == 'CONTA1' && secrets.CLAUDE_OAUTH_CONTA1 || steps.pick.outputs.a3 == 'CONTA2' && secrets.CLAUDE_OAUTH_CONTA2 || steps.pick.outputs.a3 == 'CONTA3' && secrets.CLAUDE_OAUTH_CONTA3 || secrets.CLAUDE_CODE_OAUTH_TOKEN }}
           settings: '{"env": {"CLAUDE_CODE_DISABLE_BACKGROUND_TASKS": "1"}}'
-          plugin_marketplaces: ${{ 'mention' == 'review' && 'https://github.com/anthropics/claude-code.git' || '' }}
-          plugins: ${{ 'mention' == 'review' && 'code-review@claude-code-plugins' || '' }}
-          prompt: ${{ 'mention' == 'review' && format('/code-review:code-review --comment {0}/pull/{1}', github.repository, github.event.pull_request.number) || '' }}
-          claude_args: ${{ format('{0} {1}', 'mention' == 'review' && '--allowedTools "mcp__github_inline_comment__create_inline_comment"' || '', 'mention'l != '' && format('--model {0}', 'mention'l) || '') }}
+          prompt: ${{ 'mention' == 'review' && env.REVIEW_PROMPT || '' }}
+          claude_args: ${{ format('{0} {1}', 'mention' == 'review' && format('--max-turns 80 --allowedTools "{0}"', env.REVIEW_TOOLS) || '', 'mention'l != '' && format('--model {0}', 'mention'l) || '') }}
           additional_permissions: |
             actions: read
 
