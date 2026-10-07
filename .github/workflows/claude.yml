@@ -18,7 +18,10 @@ jobs:
       (github.event_name == 'pull_request_review_comment' && contains(github.event.comment.body, '@claude')) ||
       (github.event_name == 'pull_request_review' && contains(github.event.review.body, '@claude')) ||
       (github.event_name == 'issues' && (contains(github.event.issue.body, '@claude') || contains(github.event.issue.title, '@claude')))
-    runs-on: ubuntu-latest
+    # Billing fallback (2026-10-07): repo variable CI_RUNNER=pc sends the job to the owner's PC
+    # runner (label pc-mateus, ~/.claude/scripts/gh_pc_runners.ps1); otherwise GitHub-hosted.
+    # PR de fork nunca roda no PC: o runner de lá não é efêmero e usa o usuário do dono.
+    runs-on: ${{ vars.CI_RUNNER == 'pc' && (github.event.pull_request == null || github.event.pull_request.head.repo.full_name == github.repository) && fromJSON('["self-hosted","pc-mateus"]') || 'ubuntu-latest' }}
     timeout-minutes: 45
     permissions:
       contents: read
@@ -62,7 +65,20 @@ jobs:
            `## Review do Claude` · veredito (**Aprovado** / **Mudanças necessárias** se houver
            BLOCKER ou MAJOR) · tabela `Gravidade | Arquivo:linha | Achado` · uma linha "O que
            foi verificado" (arquivos e regras lidos). Sem achados, diga isso e o que verificou.
+    defaults:
+      run:
+        shell: bash
     steps:
+      - name: Isolated Claude config on the PC runner
+        if: runner.environment == 'self-hosted'
+        run: |
+          # Never load the owner's ~/.claude (hooks, CLAUDE.md, MCP) inside a CI job.
+          dir="$RUNNER_TEMP/claude-home"
+          rm -rf "$dir" && mkdir -p "$dir"
+          echo "CLAUDE_CONFIG_DIR=$dir" >> "$GITHUB_ENV"
+          # The action's installer is Linux/macOS only: reuse the CLI already installed on the PC.
+          echo "CLAUDE_EXE=$(cygpath -w "$(command -v claude.exe)")" >> "$GITHUB_ENV"
+
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
@@ -75,19 +91,24 @@ jobs:
           T_CONTA2: ${{ secrets.CLAUDE_OAUTH_CONTA2 }}
           T_CONTA3: ${{ secrets.CLAUDE_OAUTH_CONTA3 }}
           T_LEGACY: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          PYTHONUTF8: "1"
         run: |
-          npm install -g @anthropic-ai/claude-code@latest > /tmp/npm.log 2>&1 || tail -5 /tmp/npm.log
+          if [ "$RUNNER_ENVIRONMENT" != "self-hosted" ]; then
+            npm install -g @anthropic-ai/claude-code@latest > "$RUNNER_TEMP/npm.log" 2>&1 || tail -5 "$RUNNER_TEMP/npm.log"
+          fi
           command -v claude || echo "claude CLI not on PATH"
-          python3 - <<'PY'
-          import json, os, subprocess, tempfile
+          PYTHON=$(command -v python3 || command -v python)
+          "$PYTHON" - <<'PY'
+          import json, os, shutil, subprocess, tempfile
 
           def probe(token):
               """Return (seven_day, five_hour) utilization 0-1, or None if the token failed."""
               env = {k: v for k, v in os.environ.items() if not k.startswith(("ANTHROPIC_", "T_"))}
+              claude = shutil.which("claude") or "claude"
               env["CLAUDE_CODE_OAUTH_TOKEN"] = token
               try:
                   proc = subprocess.run(
-                      ["claude", "-p", "ok", "--model", "haiku", "--output-format", "json", "--verbose"],
+                      [claude, "-p", "ok", "--model", "haiku", "--output-format", "json", "--verbose"],
                       env=env, cwd=tempfile.mkdtemp(), capture_output=True, text=True, timeout=120,
                   )
                   events = json.loads(proc.stdout)
@@ -126,10 +147,10 @@ jobs:
               print(f"{name}: seven_day={seven:.0%} five_hour={five:.0%}")
           order = [n for _, _, n in sorted(ranked)] + broken
           order += ["NONE"] * (3 - len(order))
-          with open(os.environ["GITHUB_OUTPUT"], "a") as fh:
+          with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as fh:
               for i, name in enumerate(order[:3], 1):
                   fh.write(f"a{i}={name}\n")
-          with open(os.environ["GITHUB_STEP_SUMMARY"], "a") as fh:
+          with open(os.environ["GITHUB_STEP_SUMMARY"], "a", encoding="utf-8") as fh:
               fh.write("### Conta do Claude escolhida\n\nOrdem de tentativa: " + " → ".join(order[:3]) + "\n")
           PY
 
@@ -143,6 +164,7 @@ jobs:
           settings: '{"env": {"CLAUDE_CODE_DISABLE_BACKGROUND_TASKS": "1"}}'
           prompt: ${{ 'mention' == 'review' && env.REVIEW_PROMPT || '' }}
           claude_args: ${{ format('{0} {1}', 'mention' == 'review' && format('--max-turns 80 --allowedTools "{0}"', env.REVIEW_TOOLS) || '', 'mention'l != '' && format('--model {0}', 'mention'l) || '') }}
+          path_to_claude_code_executable: ${{ env.CLAUDE_EXE }}
           additional_permissions: |
             actions: read
 
@@ -156,6 +178,7 @@ jobs:
           settings: '{"env": {"CLAUDE_CODE_DISABLE_BACKGROUND_TASKS": "1"}}'
           prompt: ${{ 'mention' == 'review' && env.REVIEW_PROMPT || '' }}
           claude_args: ${{ format('{0} {1}', 'mention' == 'review' && format('--max-turns 80 --allowedTools "{0}"', env.REVIEW_TOOLS) || '', 'mention'l != '' && format('--model {0}', 'mention'l) || '') }}
+          path_to_claude_code_executable: ${{ env.CLAUDE_EXE }}
           additional_permissions: |
             actions: read
 
@@ -168,6 +191,7 @@ jobs:
           settings: '{"env": {"CLAUDE_CODE_DISABLE_BACKGROUND_TASKS": "1"}}'
           prompt: ${{ 'mention' == 'review' && env.REVIEW_PROMPT || '' }}
           claude_args: ${{ format('{0} {1}', 'mention' == 'review' && format('--max-turns 80 --allowedTools "{0}"', env.REVIEW_TOOLS) || '', 'mention'l != '' && format('--model {0}', 'mention'l) || '') }}
+          path_to_claude_code_executable: ${{ env.CLAUDE_EXE }}
           additional_permissions: |
             actions: read
 
